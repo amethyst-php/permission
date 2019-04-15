@@ -53,18 +53,17 @@ class FlushPermissionsCommand extends Command
             }
         });
 
-        $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'admin'])->getResource();
-
-        (new Models\Permission)->get()->map(function ($permission) use ($admin) {
-            $admin->givePermissionTo($permission->name);
-        });
+        $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
+        $admin->givePermissionTo((new Models\Permission)->get()->map(function ($permission) {
+            return $permission->name;
+        })->toArray());
         return 1;
     }
 
     public function updatePermissions($permissions)
     {
         foreach ($permissions as $permission) {
-            $permission = app(Managers\PermissionManager::class)->findOrCreate(['name' => $permission, 'guard_name' => 'admin'])->getResource();
+            $permission = app(Managers\PermissionManager::class)->findOrCreate(['name' => $permission, 'guard_name' => 'web'])->getResource();
         }
     }
 }
