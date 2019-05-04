@@ -24,6 +24,17 @@ class PermissionServiceProvider extends CommonServiceProvider
 		Config::set('amethyst.permission.data.model-has-role.table', Config::get('permission.table_names.model_has_roles'));
 		Config::set('amethyst.permission.data.role-has-permission.table', Config::get('permission.table_names.role_has_permissions'));
 
+
+        $this->commands([Commands\FlushPermissionsCommand::class]);
+	}
+	
+    /**
+     * @inherit
+     */
+    public function boot()
+    {
+        parent::boot();
+
         \Illuminate\Database\Eloquent\Builder::macro('hasPermissions', function (): MorphMany {
             return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\ModelHasPermission::class, 'hasPermissions', 'model');
         });
@@ -31,7 +42,5 @@ class PermissionServiceProvider extends CommonServiceProvider
         \Illuminate\Database\Eloquent\Builder::macro('hasRoles', function (): MorphMany {
             return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\ModelHasRole::class, 'hasRoles', 'model');
         });
-
-        $this->commands([Commands\FlushPermissionsCommand::class]);
-	}
+    }
 }
