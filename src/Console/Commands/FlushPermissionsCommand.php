@@ -42,6 +42,8 @@ class FlushPermissionsCommand extends Command
     {
         $helper = new \Railken\Amethyst\Common\Helper();
 
+        $this->info("Generating permissions...");
+
         $helper->getData()->map(function ($data) use ($helper) {
 
             $manager = app(Arr::get($data, 'manager'));
@@ -53,11 +55,13 @@ class FlushPermissionsCommand extends Command
             }
         });
 
+        $this->info("Adding permissions to role admin...");
         $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
-        $admin->givePermissionTo((new Models\Permission)->get()->map(function ($permission) {
-            return $permission->name;
-        })->toArray());
-        return 1;
+
+        $admin->permissions()->sync((new Models\Permission)->get(), false);
+        $admin->forgetCachedPermissions();
+
+        $this->info("Done!");
     }
 
     public function updatePermissions($permissions)
