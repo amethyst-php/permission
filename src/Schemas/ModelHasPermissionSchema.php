@@ -5,6 +5,7 @@ namespace Railken\Amethyst\Schemas;
 use Railken\Lem\Attributes;
 use Railken\Lem\Schema;
 use Railken\Amethyst\Managers;
+use Railken\Lem\Contracts\EntityContract;
 
 class ModelHasPermissionSchema extends Schema
 {
@@ -28,6 +29,20 @@ class ModelHasPermissionSchema extends Schema
                 ->setRelationManager(Managers\PermissionManager::class)
                 ->setRelationName('permission')
                 ->setRequired(true),
+            Attributes\EnumAttribute::make('object_type', app('amethyst')->getMorphListable('model-has-permission', 'object'))
+                ->setRequired(true),
+            Attributes\MorphToAttribute::make('object_id')
+                ->setRelationKey('object_type')
+                ->setRelationName('object')
+                ->setRelations(app('amethyst')->getMorphRelationable('model-has-permission', 'object'))
+                ->setRequired(false),
+            Attributes\TextAttribute::make('attribute')->setDefault(function (EntityContract $entity) {
+                $manager = app(app('amethyst')->findManagerByNameCached($entity->object_type));
+
+                return $manager->getAttributes()->map(function ($attribute) {
+                    return $attribute->getName();
+                })->implode(",");
+            }),
             Attributes\CreatedAtAttribute::make()
         ];
     }

@@ -44,30 +44,48 @@ class FlushPermissionsCommand extends Command
 
         $this->info("Generating permissions...");
 
-        $helper->getData()->map(function ($data) use ($helper) {
+        $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
+
+
+        $helper->getData()->map(function ($data) use ($admin, $helper) {
 
             $manager = app(Arr::get($data, 'manager'));
 
-            $this->updatePermissions($manager->getAuthorizer()->getPermissions());
+            $permissions = $this->updatePermissions($manager);
 
-            foreach ($manager->getAttributes() as $attribute) {
-                $this->updatePermissions($attribute->getPermissions());
-            }
+
+
+            $attributes = $manager->getAttributes()->map(function ($attribute) {
+                return $attribute->getName();
+            });
+            
+            $permissions->map(function ($permission) use ($manager, $admin, $attributes) {
+                app(Managers\ModelHasPermissionManager::class)->findOrCreateOrFail([
+                    'permission_id' => $permission->id,
+                    'object_type' => app('amethyst')->findMorphByModelCached($manager->getEntity()),
+                    'model_type' => 'role',
+                    'attribute' => $attributes->implode(","),
+                    'model_id' => $admin->id,
+                ])->getResource();
+            });
         });
 
-        $this->info("Adding permissions to role admin...");
-        $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
 
-        $admin->permissions()->sync((new Models\Permission)->get(), false);
+
         $admin->forgetCachedPermissions();
 
         $this->info("Done!");
     }
 
-    public function updatePermissions($permissions)
+    public function updatePermissions($manager)
     {
-        foreach ($permissions as $permission) {
-            $permission = app(Managers\PermissionManager::class)->findOrCreate(['name' => $permission, 'guard_name' => 'web'])->getResource();
+        $permissions = collect();
+
+        foreach ($manager->getAuthorizer()->getPermissions() as $permission) {
+            $permissions->push(app(Managers\PermissionManager::class)->findOrCreate(['name' => $permission, 'guard_name' => 'web'])->getResource());
         }
+
+        return $permissions;
+
     }
 }

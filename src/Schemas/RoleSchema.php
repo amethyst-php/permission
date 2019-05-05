@@ -20,8 +20,7 @@ class RoleSchema extends Schema
                 ->setRequired(true)
                 ->setUnique(true),
             Attributes\TextAttribute::make('guard_name')
-                ->setRequired(true)
-                ->setUnique(true),
+                ->setRequired(true),
             Attributes\CreatedAtAttribute::make(),
             Attributes\UpdatedAtAttribute::make()
         ];

@@ -2,14 +2,17 @@
 
 namespace Railken\Amethyst\Models;
 
-use Spatie\Permission\Models\Role as Model;
+use Illuminate\Database\Eloquent\Model;
 use Railken\Amethyst\Common\ConfigurableModel;
 use Railken\Lem\Contracts\EntityContract;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Spatie\Permission\Traits\HasPermissions;
 
 class Role extends Model implements EntityContract
 {
     use ConfigurableModel;
+    use HasPermissions;
 
     /**
      * Create a new Eloquent model instance.
@@ -22,11 +25,4 @@ class Role extends Model implements EntityContract
         parent::__construct($attributes);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function hasPermissions(): HasMany
-    {
-        return $this->hasMany(RoleHasPermission::class);
-    }
 }

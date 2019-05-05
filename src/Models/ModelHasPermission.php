@@ -35,6 +35,14 @@ class ModelHasPermission extends Model implements EntityContract
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function object(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function permission(): BelongsTo

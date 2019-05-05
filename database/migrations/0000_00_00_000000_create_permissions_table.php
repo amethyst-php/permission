@@ -39,10 +39,18 @@ class CreatePermissionsTable extends Migration
             $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type', ]);
 
+            $table->string('object_type')->nullable();
+            $table->integer('object_id')->unsigned()->nullable();
+            $table->index(['object_type', 'object_id']);
+
+            $table->string('attribute')->nullable();
+
             $table->foreign('permission_id')
                 ->references('id')
                 ->on($tableNames['permissions'])
                 ->onDelete('cascade');
+                
+            $table->timestamps();
         });
 
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames) {
