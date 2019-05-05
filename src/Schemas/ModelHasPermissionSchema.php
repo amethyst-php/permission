@@ -2,10 +2,10 @@
 
 namespace Railken\Amethyst\Schemas;
 
-use Railken\Lem\Attributes;
-use Railken\Lem\Schema;
 use Railken\Amethyst\Managers;
+use Railken\Lem\Attributes;
 use Railken\Lem\Contracts\EntityContract;
+use Railken\Lem\Schema;
 
 class ModelHasPermissionSchema extends Schema
 {
@@ -41,9 +41,9 @@ class ModelHasPermissionSchema extends Schema
 
                 return $manager->getAttributes()->map(function ($attribute) {
                     return $attribute->getName();
-                })->implode(",");
+                })->implode(',');
             }),
-            Attributes\CreatedAtAttribute::make()
+            Attributes\CreatedAtAttribute::make(),
         ];
     }
 }

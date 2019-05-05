@@ -5,8 +5,6 @@ namespace Railken\Amethyst\Models;
 use Illuminate\Database\Eloquent\Model;
 use Railken\Amethyst\Common\ConfigurableModel;
 use Railken\Lem\Contracts\EntityContract;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Permission\Traits\HasPermissions;
 
 class Role extends Model implements EntityContract
@@ -24,5 +22,4 @@ class Role extends Model implements EntityContract
         $this->ini('amethyst.permission.data.role');
         parent::__construct($attributes);
     }
-
 }

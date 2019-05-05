@@ -2,7 +2,7 @@
 
 namespace Railken\Amethyst\Traits;
 
-trait HasCompoundPermissions 
+trait HasCompoundPermissions
 {
     public function permissionsCompound(): MorphMany
     {

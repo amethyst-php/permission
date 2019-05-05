@@ -22,7 +22,7 @@ class PermissionSchema extends Schema
             Attributes\TextAttribute::make('guard_name')
                 ->setRequired(true),
             Attributes\CreatedAtAttribute::make(),
-            Attributes\UpdatedAtAttribute::make()
+            Attributes\UpdatedAtAttribute::make(),
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Railken\Amethyst\Traits;
 
-trait HasPermissions 
+trait HasPermissions
 {
     public function permissionsPivoted(): MorphMany
     {

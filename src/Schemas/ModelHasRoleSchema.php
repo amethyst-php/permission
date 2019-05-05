@@ -2,9 +2,9 @@
 
 namespace Railken\Amethyst\Schemas;
 
+use Railken\Amethyst\Managers;
 use Railken\Lem\Attributes;
 use Railken\Lem\Schema;
-use Railken\Amethyst\Managers;
 
 class ModelHasRoleSchema extends Schema
 {
@@ -28,7 +28,7 @@ class ModelHasRoleSchema extends Schema
                 ->setRelationManager(Managers\RoleManager::class)
                 ->setRelationName('role')
                 ->setRequired(true),
-            Attributes\CreatedAtAttribute::make()
+            Attributes\CreatedAtAttribute::make(),
         ];
     }
 }

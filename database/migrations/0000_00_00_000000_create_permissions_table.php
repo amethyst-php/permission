@@ -9,8 +9,6 @@ class CreatePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -37,7 +35,7 @@ class CreatePermissionsTable extends Migration
 
             $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type', ]);
+            $table->index([$columnNames['model_morph_key'], 'model_type']);
 
             $table->string('object_type')->nullable();
             $table->integer('object_id')->unsigned()->nullable();
@@ -49,7 +47,7 @@ class CreatePermissionsTable extends Migration
                 ->references('id')
                 ->on($tableNames['permissions'])
                 ->onDelete('cascade');
-                
+
             $table->timestamps();
         });
 
@@ -59,7 +57,7 @@ class CreatePermissionsTable extends Migration
 
             $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
-            $table->index([$columnNames['model_morph_key'], 'model_type', ]);
+            $table->index([$columnNames['model_morph_key'], 'model_type']);
 
             $table->foreign('role_id')
                 ->references('id')
@@ -90,8 +88,6 @@ class CreatePermissionsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

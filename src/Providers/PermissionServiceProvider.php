@@ -3,43 +3,39 @@
 namespace Railken\Amethyst\Providers;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Railken\Amethyst\Common\CommonServiceProvider;
 use Illuminate\Support\Facades\Config;
-use Railken\Amethyst\Console\Commands;
-use Illuminate\Support\Arr;
-use Railken\Amethyst\Api\Http\Controllers\RestManagerController;
 use Illuminate\Support\Facades\DB;
+use Railken\Amethyst\Api\Http\Controllers\RestManagerController;
+use Railken\Amethyst\Common\CommonServiceProvider;
+use Railken\Amethyst\Console\Commands;
 use Railken\Amethyst\Models\ModelHasPermission;
-use Railken\Amethyst\Managers\ModelHasPermissionManager;
-use Railken\Amethyst\Managers\PermissionManager;
-use Railken\Lem\Contracts\ManagerContract;
-use Railken\Amethyst\Services\PermissionService;
 use Railken\Amethyst\Observers\ModelHasPermissionObserver;
+use Railken\Amethyst\Services\PermissionService;
+use Railken\Lem\Contracts\ManagerContract;
 
 class PermissionServiceProvider extends CommonServiceProvider
 {
-	/**
-	 * @inherit
-	 */
-	public function register()
-	{
-		parent::register();
+    /**
+     * @inherit
+     */
+    public function register()
+    {
+        parent::register();
 
-		$this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
+        $this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
 
-		Config::set('amethyst.permission.data.permission.table', Config::get('permission.table_names.permissions'));
-		Config::set('amethyst.permission.data.role.table', Config::get('permission.table_names.roles'));
-		Config::set('amethyst.permission.data.model-has-permission.table', Config::get('permission.table_names.model_has_permissions'));
-		Config::set('amethyst.permission.data.model-has-role.table', Config::get('permission.table_names.model_has_roles'));
-		Config::set('amethyst.permission.data.role-has-permission.table', Config::get('permission.table_names.role_has_permissions'));
+        Config::set('amethyst.permission.data.permission.table', Config::get('permission.table_names.permissions'));
+        Config::set('amethyst.permission.data.role.table', Config::get('permission.table_names.roles'));
+        Config::set('amethyst.permission.data.model-has-permission.table', Config::get('permission.table_names.model_has_permissions'));
+        Config::set('amethyst.permission.data.model-has-role.table', Config::get('permission.table_names.model_has_roles'));
+        Config::set('amethyst.permission.data.role-has-permission.table', Config::get('permission.table_names.role_has_permissions'));
 
         Config::set('permission.models.role', Config::get('amethyst.permission.data.role.model'));
         Config::set('permission.models.permission', Config::get('amethyst.permission.data.permission.model'));
 
-
         $this->commands([Commands\FlushPermissionsCommand::class]);
-	}
-	
+    }
+
     /**
      * @inherit
      */
@@ -58,21 +54,20 @@ class PermissionServiceProvider extends CommonServiceProvider
         app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
 
         app('amethyst')->getData()->map(function ($data, $key) {
-       		app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
+            app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
         });
 
         RestManagerController::addHandler('query', function ($data) {
             return $this->attachPermissionsToQuery($data->manager, $data->query);
         });
-        
+
         ModelHasPermission::observe(ModelHasPermissionObserver::class);
     }
 
     public function attachPermissionsToQuery(ManagerContract $manager, $query)
-    {   
-
+    {
         $agent = $manager->getAgent();
-        
+
         if (!$agent->id) {
             return;
         }
@@ -81,12 +76,11 @@ class PermissionServiceProvider extends CommonServiceProvider
 
         $tableName = $query->getQuery()->from;
 
-        $permission = app(PermissionService::class)->findFirstPermissionByPolicyCached($agent, sprintf("%s.show", $name));
+        $permission = app(PermissionService::class)->findFirstPermissionByPolicyCached($agent, sprintf('%s.show', $name));
 
-        $query->leftJoin("model_has_permissions as p", function($join) use ($permission, $tableName, $name) {
-
+        $query->leftJoin('model_has_permissions as p', function ($join) use ($permission, $tableName, $name) {
             $query = ModelHasPermission::where('permission_id', $permission ? $permission->id : 0)
-                ->where(function($query) use ($tableName) {
+                ->where(function ($query) use ($tableName) {
                     return $query->orWhere('object_id', DB::raw("$tableName.id"))
                         ->orWhereNull('object_id');
                 })
@@ -96,13 +90,13 @@ class PermissionServiceProvider extends CommonServiceProvider
 
             if ($permission) {
                 $query
-                ->where('model_type', "=", '"'.$permission->pivot->model_type.'"')
+                ->where('model_type', '=', '"'.$permission->pivot->model_type.'"')
                 ->where('model_id', $permission->pivot->model_id);
             }
 
             $sql = str_replace_array('?', $query->getBindings(), $query->toSql());
 
-            return $join->on("p.id", "=", DB::raw("($sql)"));
+            return $join->on('p.id', '=', DB::raw("($sql)"));
         });
 
         $select = [];
@@ -112,8 +106,7 @@ class PermissionServiceProvider extends CommonServiceProvider
             $selects[] = "CASE WHEN CONCAT(',', p.attribute, ',') like '%,$n,%' THEN $tableName.$n ELSE null END as $n";
         }
 
-
-        $query->select(DB::raw(implode(",", $selects)));
+        $query->select(DB::raw(implode(',', $selects)));
 
         // id must be present at least.
         $query->whereRaw(DB::raw("CONCAT(',', p.attribute, ',') like '%,id,%'"));

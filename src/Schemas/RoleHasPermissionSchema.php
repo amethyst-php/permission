@@ -2,9 +2,9 @@
 
 namespace Railken\Amethyst\Schemas;
 
+use Railken\Amethyst\Managers;
 use Railken\Lem\Attributes;
 use Railken\Lem\Schema;
-use Railken\Amethyst\Managers;
 
 class RoleHasPermissionSchema extends Schema
 {
@@ -25,7 +25,7 @@ class RoleHasPermissionSchema extends Schema
                 ->setRelationManager(Managers\PermissionManager::class)
                 ->setRelationName('permission')
                 ->setRequired(true),
-            Attributes\CreatedAtAttribute::make()
+            Attributes\CreatedAtAttribute::make(),
         ];
     }
 }
