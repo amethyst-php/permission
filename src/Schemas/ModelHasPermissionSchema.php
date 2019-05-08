@@ -42,7 +42,7 @@ class ModelHasPermissionSchema extends Schema
                 return $manager->getAttributes()->map(function ($attribute) {
                     return $attribute->getName();
                 })->implode(',');
-            }),
+            })->setMaxLength(4096),
             Attributes\CreatedAtAttribute::make(),
         ];
     }
