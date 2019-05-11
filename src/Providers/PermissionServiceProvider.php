@@ -103,7 +103,7 @@ class PermissionServiceProvider extends CommonServiceProvider
 
         foreach ($manager->getAttributes() as $attribute) {
             $n = $attribute->getName();
-            $selects[] = "CASE WHEN CONCAT(',', p.attribute, ',') like '%,$n,%' THEN $tableName.$n ELSE null END as $n";
+            $selects[] = "CASE WHEN CONCAT(',', p.attribute, ',') like '%,$n,%' THEN $tableName.$n ELSE null END as `$n`";
         }
 
         $query->select(DB::raw(implode(',', $selects)));
