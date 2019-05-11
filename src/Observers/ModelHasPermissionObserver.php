@@ -11,8 +11,6 @@ class ModelHasPermissionObserver
      * Handle the ModelHasPermission "deleted" event.
      *
      * @param \Railken\Amethyst\Models\ModelHasPermission $modelHasPermission
-     *
-     * @return void
      */
     public function saved(ModelHasPermission $modelHasPermission)
     {
