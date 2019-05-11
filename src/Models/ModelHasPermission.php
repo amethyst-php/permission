@@ -46,6 +46,6 @@ class ModelHasPermission extends Model implements EntityContract
      */
     public function permission(): BelongsTo
     {
-        return $this->belongsTo(Permission::class);
+        return $this->belongsTo(config('amethyst.permission.data.permission.model'));
     }
 }

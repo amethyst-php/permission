@@ -38,6 +38,6 @@ class ModelHasRole extends Model implements EntityContract
      */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(config('amethyst.permission.data.role.model'));
     }
 }
