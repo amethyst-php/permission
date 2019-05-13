@@ -50,8 +50,8 @@ class PermissionServiceProvider extends CommonServiceProvider
         \Illuminate\Database\Eloquent\Builder::macro('hasRoles', function (): MorphMany {
             return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\ModelHasRole::class, 'hasRoles', 'model');
         });
-
         app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
+
 
         app('amethyst')->getData()->map(function ($data, $key) {
             app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
