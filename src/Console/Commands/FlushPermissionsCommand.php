@@ -5,6 +5,7 @@ namespace Railken\Amethyst\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Railken\Amethyst\Managers;
+use Railken\Amethyst\Models;
 
 class FlushPermissionsCommand extends Command
 {
@@ -40,11 +41,20 @@ class FlushPermissionsCommand extends Command
         $helper = new \Railken\Amethyst\Common\Helper();
 
         $this->info('Generating permissions...');
+        $this->info('');
+        
+        $data = $helper->getData();
+
+        $bar = $this->output->createProgressBar($data->count());
 
         $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
 
-        $helper->getData()->map(function ($data) use ($admin, $helper) {
+        $bar->start();
+        
+        $data->map(function ($data) use ($admin, $helper, $bar) {
             $manager = app(Arr::get($data, 'manager'));
+
+            $start = microtime(true);
 
             $permissions = $this->updatePermissions($manager);
 
@@ -52,19 +62,31 @@ class FlushPermissionsCommand extends Command
                 return $attribute->getName();
             });
 
-            $permissions->map(function ($permission) use ($manager, $admin, $attributes) {
-                app(Managers\ModelHasPermissionManager::class)->findOrCreateOrFail([
+            $type = app('amethyst')->findMorphByModel($manager->getEntity());
+
+            $permissions->map(function ($permission) use ($admin, $type, $attributes) {
+
+                $model = app(Models\ModelHasPermission::class);
+
+                $model->unsetEventDispatcher();
+
+                $model->firstOrCreate([
                     'permission_id' => $permission->id,
-                    'object_type'   => app('amethyst')->findMorphByModelCached($manager->getEntity()),
+                    'object_type'   => $type,
                     'model_type'    => 'role',
                     'attribute'     => $attributes->implode(','),
                     'model_id'      => $admin->id,
-                ])->getResource();
+                ]);
             });
+
+            $bar->advance();
         });
 
         $admin->forgetCachedPermissions();
 
+        $bar->finish();
+        $this->info('');
+        $this->info('');
         $this->info('Done!');
     }
 
