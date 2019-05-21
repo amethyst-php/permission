@@ -37,7 +37,7 @@ class ModelHasPermissionSchema extends Schema
                 ->setRelations(app('amethyst')->getMorphRelationable('model-has-permission', 'object'))
                 ->setRequired(false),
             Attributes\TextAttribute::make('attribute')->setDefault(function (EntityContract $entity) {
-                $manager = app(app('amethyst')->findManagerByNameCached($entity->object_type));
+                $manager = app(app('amethyst')->findManagerByName($entity->object_type));
 
                 return $manager->getAttributes()->map(function ($attribute) {
                     return $attribute->getName();

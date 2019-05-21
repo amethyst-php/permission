@@ -54,8 +54,6 @@ class FlushPermissionsCommand extends Command
         $data->map(function ($data) use ($admin, $helper, $bar) {
             $manager = app(Arr::get($data, 'manager'));
 
-            $start = microtime(true);
-
             $permissions = $this->updatePermissions($manager);
 
             $attributes = $manager->getAttributes()->map(function ($attribute) {
