@@ -42,7 +42,7 @@ class FlushPermissionsCommand extends Command
 
         $this->info('Generating permissions...');
         $this->info('');
-        
+
         $data = $helper->getData();
 
         $bar = $this->output->createProgressBar($data->count());
@@ -50,7 +50,7 @@ class FlushPermissionsCommand extends Command
         $admin = app(Managers\RoleManager::class)->findOrCreate(['name' => 'admin', 'guard_name' => 'web'])->getResource();
 
         $bar->start();
-        
+
         $data->map(function ($data) use ($admin, $helper, $bar) {
             $manager = app(Arr::get($data, 'manager'));
 
@@ -63,7 +63,6 @@ class FlushPermissionsCommand extends Command
             $type = app('amethyst')->findMorphByModel($manager->getEntity());
 
             $permissions->map(function ($permission) use ($admin, $type, $attributes) {
-
                 $model = app(Models\ModelHasPermission::class);
 
                 $model->unsetEventDispatcher();
