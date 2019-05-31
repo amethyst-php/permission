@@ -56,8 +56,10 @@ class PermissionServiceProvider extends CommonServiceProvider
             app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
         });
 
-        RestManagerController::addHandler('query', function ($data) {
-            return $this->attachPermissionsToQuery($data->manager, $data->query);
+        $this->app->booted(function () {
+            RestManagerController::addHandler('query', function ($data) {
+                return $this->attachPermissionsToQuery($data->manager, $data->query);
+            });
         });
 
         ModelHasPermission::observe(ModelHasPermissionObserver::class);
