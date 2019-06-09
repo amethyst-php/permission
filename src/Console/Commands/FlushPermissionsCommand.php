@@ -67,13 +67,18 @@ class FlushPermissionsCommand extends Command
 
                 $model->unsetEventDispatcher();
 
-                $model->firstOrCreate([
+                $model = $model->firstOrCreate([
                     'permission_id' => $permission->id,
                     'object_type'   => $type,
                     'model_type'    => 'role',
-                    'attribute'     => $attributes->implode(','),
                     'model_id'      => $admin->id,
                 ]);
+
+                $model->fill([
+                    'attribute'     => $attributes->implode(','),
+                ]);
+
+                $model->save();
             });
 
             $bar->advance();

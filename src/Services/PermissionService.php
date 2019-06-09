@@ -20,10 +20,11 @@ class PermissionService implements CacheableContract
 
     public function findFirstPermissionByPolicy(AgentContract $agent, string $permission)
     {
-        $permissionChecker = $agent->roles->map(function ($role) {
+        $permissionChecker = $agent->roles ? $agent->roles->map(function ($role) {
             return $role;
-        });
+        }) : collect();
         $permissionChecker->push($agent);
+
 
         foreach ($permissionChecker as $checker) {
             $p = $checker->permissions()->where('name', $permission)->withPivot('object_id', 'attribute')->first();
