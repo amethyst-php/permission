@@ -25,7 +25,6 @@ class PermissionService implements CacheableContract
         }) : collect();
         $permissionChecker->push($agent);
 
-
         foreach ($permissionChecker as $checker) {
             $p = $checker->permissions()->where('name', $permission)->withPivot('object_id', 'attribute')->first();
 

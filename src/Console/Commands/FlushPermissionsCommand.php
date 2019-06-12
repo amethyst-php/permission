@@ -75,7 +75,7 @@ class FlushPermissionsCommand extends Command
                 ]);
 
                 $model->fill([
-                    'attribute'     => $attributes->implode(','),
+                    'attribute' => $attributes->implode(','),
                 ]);
 
                 $model->save();
