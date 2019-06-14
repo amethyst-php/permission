@@ -2,7 +2,6 @@
 
 namespace Railken\Amethyst\Providers;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Railken\Amethyst\Api\Http\Controllers\RestManagerController;
@@ -61,7 +60,7 @@ class PermissionServiceProvider extends CommonServiceProvider
     public function attachPermissionsToQuery(ManagerContract $manager, $query)
     {
         return;
-        
+
         $agent = $manager->getAgent();
 
         if (!$agent->id) {
