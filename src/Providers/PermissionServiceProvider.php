@@ -43,13 +43,6 @@ class PermissionServiceProvider extends CommonServiceProvider
     {
         parent::boot();
 
-        \Illuminate\Database\Eloquent\Builder::macro('hasPermissions', function (): MorphMany {
-            return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\ModelHasPermission::class, 'hasPermissions', 'model');
-        });
-
-        \Illuminate\Database\Eloquent\Builder::macro('hasRoles', function (): MorphMany {
-            return app('amethyst')->createMacroMorphRelation($this, \Railken\Amethyst\Models\ModelHasRole::class, 'hasRoles', 'model');
-        });
         app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
 
         app('amethyst')->getData()->map(function ($data, $key) {
@@ -67,6 +60,8 @@ class PermissionServiceProvider extends CommonServiceProvider
 
     public function attachPermissionsToQuery(ManagerContract $manager, $query)
     {
+        return;
+        
         $agent = $manager->getAgent();
 
         if (!$agent->id) {
