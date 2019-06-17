@@ -42,10 +42,10 @@ class PermissionServiceProvider extends CommonServiceProvider
     {
         parent::boot();
 
-        app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
+        // app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
 
         app('amethyst')->getData()->map(function ($data, $key) {
-            app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
+            // app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
         });
 
         $this->app->booted(function () {
