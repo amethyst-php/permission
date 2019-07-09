@@ -1,6 +1,6 @@
 <?php
 
-namespace Railken\Amethyst\Traits;
+namespace Amethyst\Traits;
 
 trait HasPermissions
 {

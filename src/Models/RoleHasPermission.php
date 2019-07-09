@@ -1,10 +1,10 @@
 <?php
 
-namespace Railken\Amethyst\Models;
+namespace Amethyst\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Railken\Amethyst\Common\ConfigurableModel;
+use Amethyst\Common\ConfigurableModel;
 use Railken\Lem\Contracts\EntityContract;
 
 class RoleHasPermission extends Model implements EntityContract

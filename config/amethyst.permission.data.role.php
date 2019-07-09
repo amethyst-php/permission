@@ -2,12 +2,12 @@
 
 return [
     'comment'    => 'Role',
-    'model'      => Railken\Amethyst\Models\Role::class,
-    'schema'     => Railken\Amethyst\Schemas\RoleSchema::class,
-    'repository' => Railken\Amethyst\Repositories\RoleRepository::class,
-    'serializer' => Railken\Amethyst\Serializers\RoleSerializer::class,
-    'validator'  => Railken\Amethyst\Validators\RoleValidator::class,
-    'authorizer' => Railken\Amethyst\Authorizers\RoleAuthorizer::class,
-    'faker'      => Railken\Amethyst\Fakers\RoleFaker::class,
-    'manager'    => Railken\Amethyst\Managers\RoleManager::class,
+    'model'      => Amethyst\Models\Role::class,
+    'schema'     => Amethyst\Schemas\RoleSchema::class,
+    'repository' => Amethyst\Repositories\RoleRepository::class,
+    'serializer' => Amethyst\Serializers\RoleSerializer::class,
+    'validator'  => Amethyst\Validators\RoleValidator::class,
+    'authorizer' => Amethyst\Authorizers\RoleAuthorizer::class,
+    'faker'      => Amethyst\Fakers\RoleFaker::class,
+    'manager'    => Amethyst\Managers\RoleManager::class,
 ];

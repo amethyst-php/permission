@@ -1,15 +1,15 @@
 <?php
 
-namespace Railken\Amethyst\Providers;
+namespace Amethyst\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Railken\Amethyst\Api\Http\Controllers\RestManagerController;
-use Railken\Amethyst\Common\CommonServiceProvider;
-use Railken\Amethyst\Console\Commands;
-use Railken\Amethyst\Models\ModelHasPermission;
-use Railken\Amethyst\Observers\ModelHasPermissionObserver;
-use Railken\Amethyst\Services\PermissionService;
+use Amethyst\Api\Http\Controllers\RestManagerController;
+use Amethyst\Common\CommonServiceProvider;
+use Amethyst\Console\Commands;
+use Amethyst\Models\ModelHasPermission;
+use Amethyst\Observers\ModelHasPermissionObserver;
+use Amethyst\Services\PermissionService;
 use Railken\Lem\Contracts\ManagerContract;
 
 class PermissionServiceProvider extends CommonServiceProvider

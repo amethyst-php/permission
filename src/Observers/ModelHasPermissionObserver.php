@@ -1,8 +1,8 @@
 <?php
 
-namespace Railken\Amethyst\Observers;
+namespace Amethyst\Observers;
 
-use Railken\Amethyst\Models\ModelHasPermission;
+use Amethyst\Models\ModelHasPermission;
 use Spatie\Permission\PermissionRegistrar;
 
 class ModelHasPermissionObserver
@@ -10,7 +10,7 @@ class ModelHasPermissionObserver
     /**
      * Handle the ModelHasPermission "deleted" event.
      *
-     * @param \Railken\Amethyst\Models\ModelHasPermission $modelHasPermission
+     * @param \Amethyst\Models\ModelHasPermission $modelHasPermission
      */
     public function saved(ModelHasPermission $modelHasPermission)
     {

@@ -2,12 +2,12 @@
 
 return [
     'comment'    => 'Permission',
-    'model'      => Railken\Amethyst\Models\Permission::class,
-    'schema'     => Railken\Amethyst\Schemas\PermissionSchema::class,
-    'repository' => Railken\Amethyst\Repositories\PermissionRepository::class,
-    'serializer' => Railken\Amethyst\Serializers\PermissionSerializer::class,
-    'validator'  => Railken\Amethyst\Validators\PermissionValidator::class,
-    'authorizer' => Railken\Amethyst\Authorizers\PermissionAuthorizer::class,
-    'faker'      => Railken\Amethyst\Fakers\PermissionFaker::class,
-    'manager'    => Railken\Amethyst\Managers\PermissionManager::class,
+    'model'      => Amethyst\Models\Permission::class,
+    'schema'     => Amethyst\Schemas\PermissionSchema::class,
+    'repository' => Amethyst\Repositories\PermissionRepository::class,
+    'serializer' => Amethyst\Serializers\PermissionSerializer::class,
+    'validator'  => Amethyst\Validators\PermissionValidator::class,
+    'authorizer' => Amethyst\Authorizers\PermissionAuthorizer::class,
+    'faker'      => Amethyst\Fakers\PermissionFaker::class,
+    'manager'    => Amethyst\Managers\PermissionManager::class,
 ];

@@ -1,8 +1,8 @@
 <?php
 
-namespace Railken\Amethyst\Services;
+namespace Amethyst\Services;
 
-use Railken\Amethyst\Managers\PermissionManager;
+use Amethyst\Managers\PermissionManager;
 use Railken\Cacheable\CacheableContract;
 use Railken\Cacheable\CacheableTrait;
 use Railken\Lem\Contracts\AgentContract;

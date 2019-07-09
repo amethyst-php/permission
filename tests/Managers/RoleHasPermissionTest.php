@@ -1,10 +1,10 @@
 <?php
 
-namespace Railken\Amethyst\Tests\Managers;
+namespace Amethyst\Tests\Managers;
 
-use Railken\Amethyst\Fakers\RoleHasPermissionFaker;
-use Railken\Amethyst\Managers\RoleHasPermissionManager;
-use Railken\Amethyst\Tests\BaseTest;
+use Amethyst\Fakers\RoleHasPermissionFaker;
+use Amethyst\Managers\RoleHasPermissionManager;
+use Amethyst\Tests\BaseTest;
 use Railken\Lem\Support\Testing\TestableBaseTrait;
 
 class RoleHasPermissionTest extends BaseTest

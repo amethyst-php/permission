@@ -1,11 +1,11 @@
 <?php
 
-namespace Railken\Amethyst\Console\Commands;
+namespace Amethyst\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-use Railken\Amethyst\Managers;
-use Railken\Amethyst\Models;
+use Amethyst\Managers;
+use Amethyst\Models;
 
 class FlushPermissionsCommand extends Command
 {
@@ -38,7 +38,7 @@ class FlushPermissionsCommand extends Command
      */
     public function handle()
     {
-        $helper = new \Railken\Amethyst\Common\Helper();
+        $helper = new \Amethyst\Common\Helper();
 
         $this->info('Generating permissions...');
         $this->info('');

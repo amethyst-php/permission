@@ -2,12 +2,12 @@
 
 return [
     'comment'    => 'ModelHasRole',
-    'model'      => Railken\Amethyst\Models\ModelHasRole::class,
-    'schema'     => Railken\Amethyst\Schemas\ModelHasRoleSchema::class,
-    'repository' => Railken\Amethyst\Repositories\ModelHasRoleRepository::class,
-    'serializer' => Railken\Amethyst\Serializers\ModelHasRoleSerializer::class,
-    'validator'  => Railken\Amethyst\Validators\ModelHasRoleValidator::class,
-    'authorizer' => Railken\Amethyst\Authorizers\ModelHasRoleAuthorizer::class,
-    'faker'      => Railken\Amethyst\Fakers\ModelHasRoleFaker::class,
-    'manager'    => Railken\Amethyst\Managers\ModelHasRoleManager::class,
+    'model'      => Amethyst\Models\ModelHasRole::class,
+    'schema'     => Amethyst\Schemas\ModelHasRoleSchema::class,
+    'repository' => Amethyst\Repositories\ModelHasRoleRepository::class,
+    'serializer' => Amethyst\Serializers\ModelHasRoleSerializer::class,
+    'validator'  => Amethyst\Validators\ModelHasRoleValidator::class,
+    'authorizer' => Amethyst\Authorizers\ModelHasRoleAuthorizer::class,
+    'faker'      => Amethyst\Fakers\ModelHasRoleFaker::class,
+    'manager'    => Amethyst\Managers\ModelHasRoleManager::class,
 ];
