@@ -2,8 +2,8 @@
 
 namespace Amethyst\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Amethyst\Common\ConfigurableModel;
+use Illuminate\Database\Eloquent\Model;
 use Railken\Lem\Contracts\EntityContract;
 use Spatie\Permission\Traits\HasPermissions;
 

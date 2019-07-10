@@ -2,14 +2,14 @@
 
 namespace Amethyst\Providers;
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Amethyst\Api\Http\Controllers\RestManagerController;
 use Amethyst\Common\CommonServiceProvider;
 use Amethyst\Console\Commands;
 use Amethyst\Models\ModelHasPermission;
 use Amethyst\Observers\ModelHasPermissionObserver;
 use Amethyst\Services\PermissionService;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Railken\Lem\Contracts\ManagerContract;
 
 class PermissionServiceProvider extends CommonServiceProvider

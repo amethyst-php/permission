@@ -2,10 +2,10 @@
 
 namespace Amethyst\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Amethyst\Managers;
 use Amethyst\Models;
+use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class FlushPermissionsCommand extends Command
 {
