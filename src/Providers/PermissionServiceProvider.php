@@ -67,7 +67,7 @@ class PermissionServiceProvider extends CommonServiceProvider
             return;
         }
 
-        $name = $manager->newEntity()->getMorphName();
+        $name = app('amethyst')->tableize($manager->getEntity());
 
         $tableName = $query->getQuery()->from;
 
