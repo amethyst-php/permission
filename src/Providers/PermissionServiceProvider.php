@@ -21,18 +21,10 @@ class PermissionServiceProvider extends CommonServiceProvider
     {
         parent::register();
 
-        $this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
-
-        Config::set('amethyst.permission.data.permission.table', Config::get('permission.table_names.permissions'));
-        Config::set('amethyst.permission.data.role.table', Config::get('permission.table_names.roles'));
-        Config::set('amethyst.permission.data.model-has-permission.table', Config::get('permission.table_names.model_has_permissions'));
-        Config::set('amethyst.permission.data.model-has-role.table', Config::get('permission.table_names.model_has_roles'));
-        Config::set('amethyst.permission.data.role-has-permission.table', Config::get('permission.table_names.role_has_permissions'));
-
-        Config::set('permission.models.role', Config::get('amethyst.permission.data.role.model'));
-        Config::set('permission.models.permission', Config::get('amethyst.permission.data.permission.model'));
-
         $this->commands([Commands\FlushPermissionsCommand::class]);
+
+        //$this->app->register(\Amethyst\Providers\GroupServiceProvider::class);
+        $this->app->register(\Amethyst\Providers\OwnerServiceProvider::class);
     }
 
     /**
@@ -42,19 +34,15 @@ class PermissionServiceProvider extends CommonServiceProvider
     {
         parent::boot();
 
-        // app('amethyst')->pushMorphRelation('model-has-permission', 'model', 'role');
-
         app('amethyst')->getData()->map(function ($data, $key) {
-            // app('amethyst')->pushMorphRelation('model-has-permission', 'object', $key);
+            app('amethyst')->pushMorphRelation('permission', 'object', $key);
         });
 
-        $this->app->booted(function () {
+        /*$this->app->booted(function () {
             RestManagerController::addHandler('query', function ($data) {
                 return $this->attachPermissionsToQuery($data->manager, $data->query);
             });
-        });
-
-        ModelHasPermission::observe(ModelHasPermissionObserver::class);
+        });*/
     }
 
     public function attachPermissionsToQuery(ManagerContract $manager, $query)

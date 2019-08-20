@@ -16,8 +16,10 @@ class PermissionFaker extends Faker
         $faker = Factory::create();
 
         $bag = new Bag();
-        $bag->set('name', $faker->name);
-        $bag->set('guard_name', $faker->name);
+        $bag->set('data', 'foo');
+        $bag->set('attribute', 'id|name|created_at|updated_at|deleted_at');
+        $bag->set('action', 'create|update|show|remove');
+        $bag->set('filter', 'id = 1');
 
         return $bag;
     }

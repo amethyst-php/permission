@@ -15,12 +15,23 @@ class PermissionSchema extends Schema
     public function getAttributes()
     {
         return [
-            Attributes\IdAttribute::make(),
-            Attributes\TextAttribute::make('name')
-                ->setRequired(true)
-                ->setUnique(true),
-            Attributes\TextAttribute::make('guard_name')
+            Attributes\UuidAttribute::make('id'),
+            Attributes\TextAttribute::make('data')
+                ->setDefault(function ($entity) {
+                    return '*';
+                })
                 ->setRequired(true),
+            Attributes\TextAttribute::make('attribute')
+                ->setDefault(function ($entity) {
+                    return '*';
+                })
+                ->setRequired(true),
+            Attributes\TextAttribute::make('action')
+                ->setDefault(function ($entity) {
+                    return '*';
+                })
+                ->setRequired(true),
+            Attributes\TextAttribute::make('filter'),
             Attributes\CreatedAtAttribute::make(),
             Attributes\UpdatedAtAttribute::make(),
         ];
