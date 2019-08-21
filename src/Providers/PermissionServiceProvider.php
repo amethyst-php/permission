@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Railken\Lem\Contracts\ManagerContract;
 use Amethyst\Models\Permission;
+use Amethyst\Models\Ownable;
 use Amethyst\Observers\PermissionObserver;
+use Amethyst\Observers\OwnablePermissionObserver;
 use Illuminate\Support\Facades\Schema;
 
 class PermissionServiceProvider extends CommonServiceProvider
@@ -43,11 +45,13 @@ class PermissionServiceProvider extends CommonServiceProvider
         parent::boot();
 
         Permission::observe(PermissionObserver::class);
+        Ownable::observe(OwnablePermissionObserver::class);
 
 
         if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
             app('amethyst.permission')->boot();
         }
+
 
         $this->app->booted(function () {
             RestManagerController::addHandler('query', function ($data) {

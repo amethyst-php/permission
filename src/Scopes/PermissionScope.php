@@ -41,7 +41,7 @@ class PermissionScope implements Scope
 
         $tableName = $builder->getQuery()->from;
 
-        $permissions = app('amethyst.permission')->permissions([$name], $agent);
+        $permissions = app('amethyst.permission')->permissions([$name], ['query'], $agent);
 
         // No permissions means no query
         if ($permissions->count() === 0) {
@@ -50,16 +50,17 @@ class PermissionScope implements Scope
         	$builder->whereRaw('0 = 1');
         }
 
-
 	    $filter = new Filter($tableName, ['*']);
 
-        foreach ($permissions as $permission) {
+        $strFilter = $permissions->filter(function ($permission) {
+        	return !empty($permission->filter);
+        })->map(function ($permission) {
+        	return "( $permission->filter )";
+        })->implode(" or ");
 
-	        $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($permission->filter, [
-	        	'agent' => $agent
-	        ]));
-        	// Apply permission for EACH 
-        }
+        $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
+        	'agent' => $agent
+        ]));
 
         /*
         $select = [];

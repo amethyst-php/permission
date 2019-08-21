@@ -7,6 +7,7 @@ use Amethyst\Managers\FooManager;
 use Amethyst\Fakers\FooFaker;
 use Railken\Lem\Exceptions\ModelNotAuthorizedException;
 use Amethyst\Scopes\PermissionScope;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionLogicTest extends BaseTest
 {   
@@ -211,5 +212,32 @@ class PermissionLogicTest extends BaseTest
         (new PermissionScope(FooManager::make(new Agent())))->apply($query);
 
         $this->assertEquals(0, $query->count());
+    }
+
+    public function testCollisionBetweenToAgents()
+    {   
+
+        app(PermissionManager::class)->createOrFail([
+            'data' => '*',
+            'action' => 'create,attributes.*',
+            'attribute' => '*'
+        ]);
+
+        $result1 = FooManager::make(new Agent(1))->create(FooFaker::make()->parameters());
+        $this->assertEquals(true, $result1->ok());
+
+        $result2a = FooManager::make(new Agent(2))->create(FooFaker::make()->parameters());
+        $this->assertEquals(true, $result2a->ok());
+        $result2b = FooManager::make(new Agent(2))->create(FooFaker::make()->parameters());
+        $this->assertEquals(true, $result2b->ok());
+
+        // Agent 1 should see only result 1 and agent 2 only 2a and 2b.
+        $query = FooManager::make()->getRepository()->newQuery();
+        (new PermissionScope(FooManager::make(new Agent(1))))->apply($query);
+        $this->assertEquals(1, $query->count());
+
+        $query = FooManager::make()->getRepository()->newQuery();
+        (new PermissionScope(FooManager::make(new Agent(2))))->apply($query);
+        $this->assertEquals(2, $query->count());
     }
 }

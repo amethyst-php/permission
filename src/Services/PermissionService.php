@@ -70,15 +70,21 @@ class PermissionService
      * Get permission.
      *
      * @param array $names
+     * @param array $actions
      * @param AgentContract $agent
      *
      * @return bool
      */
-    public function permissions(array $names, AgentContract $agent)
+    public function permissions(array $names, array $actions, AgentContract $agent)
     {
-        return $this->permissions->filter(function (Permission $model) use ($names, $agent) {
+        return $this->permissions->filter(function (Permission $model) use ($names, $actions, $agent) {
+
 
             if (!array_intersect(array_merge([$this->wildcard], $names), explode($this->separator, $model->data))) {
+                return false;
+            }
+
+            if (!array_intersect(array_merge([$this->wildcard], $actions), explode($this->separator, $model->action))) {
                 return false;
             }
 

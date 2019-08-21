@@ -7,7 +7,12 @@ use Amethyst\Traits\PermissionTrait;
 
 class Agent implements AgentContract
 {
-	public $id = 1;
-	
+	public $id;
+
     use PermissionTrait;
+
+    public function __construct($id = 1)
+    {
+    	$this->id = $id;
+    }
 }
