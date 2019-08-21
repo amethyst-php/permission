@@ -38,7 +38,7 @@ class FlushPermissionsCommand extends Command
             'data' => '*',
             'attribute' => '*',
             'action' => '*',
-            'filter' => '{{ authenticable_id }} = 1'
+            'agent' => '{{ agent.id }} == 1'
         ])->getResource();
 
         $this->info('Done!');
