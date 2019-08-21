@@ -51,12 +51,8 @@ class PermissionServiceProvider extends CommonServiceProvider
         if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
             app('amethyst.permission')->boot();
         }
-
-
         $this->app->booted(function () {
-            RestManagerController::addHandler('query', function ($data) {
-                return $data->query->addGlobalScope(new \Amethyst\Scopes\PermissionScope($data->manager));
-            });
+            \Railken\Lem\Repository::addScope(new \Amethyst\Scopes\PermissionScope);
         });
     }
 }

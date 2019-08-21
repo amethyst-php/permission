@@ -9,35 +9,22 @@ use Railken\Lem\Contracts\ManagerContract;
 use Railken\Lem\Agents\SystemAgent;
 use Railken\LaraEye\Filter;
 
-class PermissionScope implements Scope
+class PermissionScope
 {
-	/**
-	 * @var \Railken\Lem\Contracts\ManagerContract
-	 */
-	protected $manager;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct(ManagerContract $manager)
-	{
-		$this->manager = $manager;
-	}
-
     /**
      * Apply the scope to a given Eloquent query builder.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $builder
      */
-    public function apply(Builder $builder, Model $model = null): void
+    public function apply(ManagerContract $manager, Builder $builder, Model $model = null): void
     {
-        $agent = $this->manager->getAgent();
+        $agent = $manager->getAgent();
 
         if ($agent instanceof SystemAgent) {
             return;
         }
 
-        $name = app('amethyst')->tableize($this->manager->getEntity());
+        $name = app('amethyst')->tableize($manager->getEntity());
 
         $tableName = $builder->getQuery()->from;
 

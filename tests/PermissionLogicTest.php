@@ -116,7 +116,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -134,7 +134,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(1, $query->count());
     }
@@ -152,7 +152,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -171,7 +171,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(1, $query->count());
     }
@@ -190,7 +190,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -209,7 +209,7 @@ class PermissionLogicTest extends BaseTest
 
         $query = FooManager::make()->getRepository()->newQuery();
 
-        (new PermissionScope(FooManager::make(new Agent())))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -233,11 +233,11 @@ class PermissionLogicTest extends BaseTest
 
         // Agent 1 should see only result 1 and agent 2 only 2a and 2b.
         $query = FooManager::make()->getRepository()->newQuery();
-        (new PermissionScope(FooManager::make(new Agent(1))))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent(1)), $query);
         $this->assertEquals(1, $query->count());
 
         $query = FooManager::make()->getRepository()->newQuery();
-        (new PermissionScope(FooManager::make(new Agent(2))))->apply($query);
+        (new PermissionScope())->apply(FooManager::make(new Agent(2)), $query);
         $this->assertEquals(2, $query->count());
     }
 }
