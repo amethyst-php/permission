@@ -20,6 +20,7 @@ class CreatePermissionsTable extends Migration
             $table->string('action');
             $table->string('attribute');
             $table->string('filter')->nullable();
+            $table->string('agent')->nullable();
 
             $table->timestamps();
         });

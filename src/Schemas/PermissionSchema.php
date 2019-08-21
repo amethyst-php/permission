@@ -32,6 +32,7 @@ class PermissionSchema extends Schema
                 })
                 ->setRequired(true),
             Attributes\TextAttribute::make('filter'),
+            Attributes\TextAttribute::make('agent'),
             Attributes\CreatedAtAttribute::make(),
             Attributes\UpdatedAtAttribute::make(),
         ];

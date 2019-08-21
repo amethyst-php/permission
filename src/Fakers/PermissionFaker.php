@@ -20,6 +20,7 @@ class PermissionFaker extends Faker
         $bag->set('attribute', 'id|name|created_at|updated_at|deleted_at');
         $bag->set('action', 'create|update|show|remove');
         $bag->set('filter', 'id = 1');
+        $bag->set('agent', '{{ agent.id }} == 1');
 
         return $bag;
     }
