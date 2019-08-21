@@ -2,8 +2,8 @@
 
 namespace Amethyst\Observers;
 
-use Amethyst\Models\Ownable;
 use Amethyst\Managers\PermissionManager;
+use Amethyst\Models\Ownable;
 use Amethyst\Models\Permission;
 
 class OwnablePermissionObserver
@@ -24,18 +24,18 @@ class OwnablePermissionObserver
      * @param \Amethyst\Models\Ownable $ownable
      */
     public function deleted(Ownable $ownable)
-    {   
+    {
         Permission::where($this->getParameters($ownable))->delete();
     }
 
     public function getParameters(Ownable $ownable)
     {
         return [
-            'data' => $ownable->ownable_type,
-            'action' => '*',
+            'data'      => $ownable->ownable_type,
+            'action'    => '*',
             'attribute' => '*',
-            'filter' => "id = '{$ownable->ownable_id}'",
-            'agent' => "{{ agent.id }} == {$ownable->owner_id}"
+            'filter'    => "id = '{$ownable->ownable_id}'",
+            'agent'     => "{{ agent.id }} == {$ownable->owner_id}",
         ];
     }
 }

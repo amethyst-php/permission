@@ -3,18 +3,18 @@
 namespace Amethyst\Models;
 
 use Amethyst\Common\ConfigurableModel;
-use Railken\Lem\Contracts\EntityContract;
 use Illuminate\Database\Eloquent\Model;
+use Railken\Lem\Contracts\EntityContract;
 
 class Permission extends Model implements EntityContract
 {
     use ConfigurableModel;
 
-    protected $casts = [ 'id' => 'string' ];
- 
-    protected $keyType = 'string';
-
     public $incrementing = false;
+
+    protected $casts = ['id' => 'string'];
+
+    protected $keyType = 'string';
 
     /**
      * Create a new Eloquent model instance.

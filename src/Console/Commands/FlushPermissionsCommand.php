@@ -3,9 +3,7 @@
 namespace Amethyst\Console\Commands;
 
 use Amethyst\Managers;
-use Amethyst\Models;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 
 class FlushPermissionsCommand extends Command
 {
@@ -35,10 +33,10 @@ class FlushPermissionsCommand extends Command
         $this->info('Generating permissions...');
 
         $admin = app(Managers\PermissionManager::class)->findOrCreate([
-            'data' => '*',
+            'data'      => '*',
             'attribute' => '*',
-            'action' => '*',
-            'agent' => '{{ agent.id }} == 1'
+            'action'    => '*',
+            'agent'     => '{{ agent.id }} == 1',
         ])->getResource();
 
         $this->info('Done!');
