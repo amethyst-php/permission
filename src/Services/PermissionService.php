@@ -31,11 +31,29 @@ class PermissionService
      */
     protected $cached;
 
+    /**
+     * @var string
+     */
+    protected $separator = "|";
+
+    /**
+     * @var string
+     */
+    protected $wildcard = "*";
+
     public function __construct()
     {
         $this->template = new Generators\TextGenerator();
         $this->manager = new PermissionManager();
         $this->permission = collect();
+    }
+
+    /**
+     * @return Generators\TextGenerator
+     */
+    public function getTemplate(): Generators\TextGenerator
+    {
+        return $this->template;
     }
 
     /**
@@ -47,6 +65,37 @@ class PermissionService
 
         $this->cached = Cache::get('permissions');
     }
+
+    /**
+     * Get permission.
+     *
+     * @param array $names
+     * @param AgentContract $agent
+     *
+     * @return bool
+     */
+    public function permissions(array $names, AgentContract $agent)
+    {
+        return $this->permissions->filter(function (Permission $model) use ($names, $agent) {
+
+            if (!array_intersect(array_merge([$this->wildcard], $names), explode($this->separator, $model->data))) {
+                return false;
+            }
+
+            if (empty($model->agent)) {
+                return true;
+            }
+
+            $expression = $this->template->generateAndRender($model->agent, [
+                'agent' => $agent,
+            ]);
+
+            $rule = new Rule($expression, []);
+
+            return $rule->isTrue();
+        });
+    }
+
 
     /**
      * Has permission.
@@ -132,4 +181,5 @@ class PermissionService
 
         return $r;
     }
+
 }

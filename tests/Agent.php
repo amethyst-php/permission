@@ -2,10 +2,12 @@
 
 namespace Amethyst\Tests;
 
-use Railken\Lem\Agents\SystemAgent;
+use Railken\Lem\Contracts\AgentContract;
 use Amethyst\Traits\PermissionTrait;
 
-class Agent extends SystemAgent
+class Agent implements AgentContract
 {
+	public $id = 1;
+	
     use PermissionTrait;
 }
