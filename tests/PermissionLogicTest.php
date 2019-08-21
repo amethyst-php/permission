@@ -214,7 +214,7 @@ class PermissionLogicTest extends BaseTest
         $this->assertEquals(0, $query->count());
     }
 
-    public function testCollisionBetweenToAgents()
+    public function testCollisionBetweenTwoAgents()
     {   
 
         app(PermissionManager::class)->createOrFail([
