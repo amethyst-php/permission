@@ -35,7 +35,7 @@ class OwnablePermissionObserver
             'action' => '*',
             'attribute' => '*',
             'filter' => "id = '{$ownable->ownable_id}'",
-            'agent' => "{{ agent.id }} == " . $ownable->owner_id
+            'agent' => "{{ agent.id }} == {$ownable->owner_id}"
         ];
     }
 }
