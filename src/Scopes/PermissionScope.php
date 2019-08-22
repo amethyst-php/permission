@@ -38,15 +38,21 @@ class PermissionScope
 
         $filter = new Filter($tableName, ['*']);
 
-        $strFilter = $permissions->filter(function ($permission) {
+        $filteredPermissions = $permissions->filter(function ($permission) {
             return !empty($permission->filter);
-        })->map(function ($permission) {
-            return "( $permission->filter )";
-        })->implode(' or ');
+        });
 
-        $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
-            'agent' => $agent,
-        ]));
+        if ($filteredPermissions->count() === $permissions->count()) {
+
+            $strFilter = $filteredPermissions->map(function ($permission) {
+                return "( $permission->filter )";
+            })->implode(' or ');
+
+            $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
+                'agent' => $agent,
+            ]));
+
+        }
 
         /*
         $select = [];
