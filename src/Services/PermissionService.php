@@ -34,7 +34,7 @@ class PermissionService
     /**
      * @var string
      */
-    protected $separator = "|";
+    protected $separator = ",";
 
     /**
      * @var string
