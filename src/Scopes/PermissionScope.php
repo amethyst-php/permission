@@ -2,19 +2,19 @@
 
 namespace Amethyst\Scopes;
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Railken\Lem\Contracts\ManagerContract;
-use Railken\Lem\Agents\SystemAgent;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 use Railken\LaraEye\Filter;
+use Railken\Lem\Agents\SystemAgent;
+use Railken\Lem\Contracts\ManagerContract;
 
 class PermissionScope
 {
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
+     * @param \Illuminate\Database\Eloquent\Builder $builder
      */
     public function apply(ManagerContract $manager, Builder $builder, Model $model = null): void
     {
@@ -32,22 +32,27 @@ class PermissionScope
 
         // No permissions means no query
         if ($permissions->count() === 0) {
-
-        	// i think this shit is bad.
-        	$builder->whereRaw('0 = 1');
+            // i think this shit is bad.
+            $builder->whereRaw('0 = 1');
         }
 
-	    $filter = new Filter($tableName, ['*']);
+        $filter = new Filter($tableName, ['*']);
 
-        $strFilter = $permissions->filter(function ($permission) {
-        	return !empty($permission->filter);
-        })->map(function ($permission) {
-        	return "( $permission->filter )";
-        })->implode(" or ");
+        $filteredPermissions = $permissions->filter(function ($permission) {
+            return !empty($permission->filter);
+        });
 
-        $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
-        	'agent' => $agent
-        ]));
+        if ($filteredPermissions->count() === $permissions->count()) {
+
+            $strFilter = $filteredPermissions->map(function ($permission) {
+                return "( $permission->filter )";
+            })->implode(' or ');
+
+            $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
+                'agent' => $agent,
+            ]));
+
+        }
 
         /*
         $select = [];

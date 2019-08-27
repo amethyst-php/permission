@@ -2,12 +2,12 @@
 
 namespace Amethyst\Services;
 
-use Railken\Template\Generators;
 use Amethyst\Managers\PermissionManager;
-use Illuminate\Support\Facades\Cache;
 use Amethyst\Models\Permission;
+use Illuminate\Support\Facades\Cache;
 use nicoSWD\Rules\Rule;
 use Railken\Lem\Contracts\AgentContract;
+use Railken\Template\Generators;
 
 class PermissionService
 {
@@ -39,7 +39,7 @@ class PermissionService
     /**
      * @var string
      */
-    protected $wildcard = "*";
+    protected $wildcard = '*';
 
     public function __construct()
     {
@@ -57,7 +57,7 @@ class PermissionService
     }
 
     /**
-     * Boot all permissions
+     * Boot all permissions.
      */
     public function boot()
     {
@@ -69,8 +69,8 @@ class PermissionService
     /**
      * Get permission.
      *
-     * @param array $names
-     * @param array $actions
+     * @param array         $names
+     * @param array         $actions
      * @param AgentContract $agent
      *
      * @return bool
@@ -78,8 +78,6 @@ class PermissionService
     public function permissions(array $names, array $actions, AgentContract $agent)
     {
         return $this->permissions->filter(function (Permission $model) use ($names, $actions, $agent) {
-
-
             if (!array_intersect(array_merge([$this->wildcard], $names), explode($this->separator, $model->data))) {
                 return false;
             }
@@ -102,20 +100,18 @@ class PermissionService
         });
     }
 
-
     /**
      * Has permission.
      *
      * @param AgentContract $agent
-     * @param string $permission
-     * @param array  $arguments
+     * @param string        $permission
+     * @param array         $arguments
      *
      * @return bool
      */
     public function can($agent, $permission, $arguments = [])
     {
         $permission = $this->permissions->first(function (Permission $model) use ($agent, $permission) {
-
             $permissions = $this->explodePermissions($model);
 
             if (!$this->discovery($permission, $permissions)) {
@@ -134,7 +130,7 @@ class PermissionService
 
             return $rule->isTrue();
         });
-        
+
         if ($permission) {
             return true;
         }
@@ -143,21 +139,21 @@ class PermissionService
     }
 
     /**
-     * Discovery
+     * Discovery.
      *
      * @param string $permission
-     * @param array $permissions
+     * @param array  $permissions
      *
-     * @return boolean
+     * @return bool
      */
     public function discovery($permission, $permissions)
     {
-        $pp = explode(".", $permission);
+        $pp = explode('.', $permission);
         foreach ($permissions as $p) {
             if ($permission == $p) {
                 return true;
             }
-            $p = explode(".", $p);
+            $p = explode('.', $p);
             foreach ($p as $k => $in) {
                 if ($in == '*') {
                     return true;
@@ -170,6 +166,7 @@ class PermissionService
                 }
             }
         }
+
         return false;
     }
 
@@ -177,15 +174,14 @@ class PermissionService
     {
         $r = [];
 
-        foreach (explode("|", $model->data) as $data) {
+        foreach (explode('|', $model->data) as $data) {
             $r = array_merge(
                 $r,
                 [$data],
-                preg_filter('/^/', $data . '.', explode("|", $model->action))
+                preg_filter('/^/', $data.'.', explode('|', $model->action))
             );
         }
 
         return $r;
     }
-
 }

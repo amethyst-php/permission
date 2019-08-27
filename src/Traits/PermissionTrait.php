@@ -1,4 +1,5 @@
 <?php
+
 namespace Amethyst\Traits;
 
 trait PermissionTrait
