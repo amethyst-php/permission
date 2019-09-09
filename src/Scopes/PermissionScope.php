@@ -43,7 +43,6 @@ class PermissionScope
         });
 
         if ($filteredPermissions->count() === $permissions->count()) {
-
             $strFilter = $filteredPermissions->map(function ($permission) {
                 return "( $permission->filter )";
             })->implode(' or ');
@@ -51,7 +50,6 @@ class PermissionScope
             $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
                 'agent' => $agent,
             ]));
-
         }
 
         /*
