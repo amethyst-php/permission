@@ -39,6 +39,9 @@ class FlushPermissionsCommand extends Command
             'agent'     => '{{ agent.id }} == 1',
         ])->getResource();
 
+
+
+
         $this->info('Done!');
     }
 }

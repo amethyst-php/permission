@@ -208,7 +208,7 @@ class PermissionLogicTest extends BaseTest
 
         (new PermissionScope())->apply(FooManager::make(new Agent()), $query);
 
-        $this->assertEquals(0, $query->count());
+        $this->assertEquals(1, $query->count());
     }
 
     public function testCollisionBetweenTwoAgents()

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Scope;
 use Railken\LaraEye\Filter;
 use Railken\Lem\Agents\SystemAgent;
 use Railken\Lem\Contracts\ManagerContract;
+use Railken\EloquentMapper\Scopes\FilterScope;
 
 class PermissionScope
 {
@@ -26,17 +27,17 @@ class PermissionScope
 
         $name = app('amethyst')->tableize($manager->getEntity());
 
+
         $tableName = $builder->getQuery()->from;
 
         $permissions = app('amethyst.permission')->permissions([$name], ['query'], $agent);
 
         // No permissions means no query
         if ($permissions->count() === 0) {
+
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
         }
-
-        $filter = new Filter($tableName, ['*']);
 
         $filteredPermissions = $permissions->filter(function ($permission) {
             return !empty($permission->filter);
@@ -47,9 +48,24 @@ class PermissionScope
                 return "( $permission->filter )";
             })->implode(' or ');
 
-            $filter->build($builder, app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
+            $strFilter = app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
                 'agent' => $agent,
-            ]));
+            ]);
+
+            $filter = new FilterScope(
+                function (Model $model) use ($manager) {
+                    return app('amethyst')->newManagerByModel(
+                        get_class($model), 
+                        $manager->getAgent()
+                    )->getAttributes()
+                    ->map(function ($attribute) {
+                        return $attribute->getName();
+                    })->values()->toArray();
+                },
+                $strFilter
+            );
+
+            $filter->apply($builder, $manager->newEntity());
         }
 
         /*

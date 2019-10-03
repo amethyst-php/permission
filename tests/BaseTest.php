@@ -13,7 +13,8 @@ abstract class BaseTest extends \Orchestra\Testbench\TestCase
 
         $this->artisan('migrate:fresh');
         app('amethyst.permission')->boot();
-
+        app('eloquent.mapper')->boot();
+        
         // $this->artisan('amethyst:permission:flush');
     }
 

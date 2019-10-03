@@ -77,6 +77,10 @@ class PermissionService
      */
     public function permissions(array $names, array $actions, AgentContract $agent)
     {
+        if (!$this->permissions) {
+            return collect();
+        }
+
         return $this->permissions->filter(function (Permission $model) use ($names, $actions, $agent) {
             if (!array_intersect(array_merge([$this->wildcard], $names), explode($this->separator, $model->data))) {
                 return false;
@@ -90,9 +94,11 @@ class PermissionService
                 return true;
             }
 
+            \Log::info($model->agent);
             $expression = $this->template->generateAndRender($model->agent, [
                 'agent' => $agent,
             ]);
+            \Log::info($expression);
 
             $rule = new Rule($expression, []);
 
@@ -122,9 +128,11 @@ class PermissionService
                 return true;
             }
 
+            \Log::info($model->agent);
             $expression = $this->template->generateAndRender($model->agent, [
                 'agent' => $agent,
             ]);
+            \Log::info($expression);
 
             $rule = new Rule($expression, []);
 

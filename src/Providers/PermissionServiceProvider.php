@@ -39,7 +39,7 @@ class PermissionServiceProvider extends CommonServiceProvider
         parent::boot();
 
         Permission::observe(PermissionObserver::class);
-        Ownable::observe(OwnablePermissionObserver::class);
+        // Ownable::observe(OwnablePermissionObserver::class);
 
         if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
             app('amethyst.permission')->boot();
