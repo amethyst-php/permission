@@ -17,7 +17,7 @@ class PermissionScope
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      */
-    public function apply(ManagerContract $manager, Builder $builder, Model $model = null): void
+    public function apply(ManagerContract $manager, $builder, Model $model = null): void
     {
         $agent = $manager->getAgent();
 
@@ -28,7 +28,7 @@ class PermissionScope
         $name = app('amethyst')->tableize($manager->getEntity());
 
 
-        $tableName = $builder->getQuery()->from;
+        // $tableName = $builder->getQuery()->from;
 
         $permissions = app('amethyst.permission')->permissions([$name], ['query'], $agent);
 
@@ -52,20 +52,12 @@ class PermissionScope
                 'agent' => $agent,
             ]);
 
-            $filter = new FilterScope(
-                function (Model $model) use ($manager) {
-                    return app('amethyst')->newManagerByModel(
-                        get_class($model), 
-                        $manager->getAgent()
-                    )->getAttributes()
-                    ->map(function ($attribute) {
-                        return $attribute->getName();
-                    })->values()->toArray();
-                },
-                $strFilter
+            app('amethyst')->filter(
+                $builder, 
+                $strFilter, 
+                $manager->newEntity(), 
+                $manager->getAgent()
             );
-
-            $filter->apply($builder, $manager->newEntity());
         }
 
         /*
