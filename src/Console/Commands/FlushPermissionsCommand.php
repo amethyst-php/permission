@@ -28,7 +28,7 @@ class FlushPermissionsCommand extends Command
      */
     public function handle()
     {
-        $helper = new \Amethyst\Common\Helper();
+        $helper = new \Amethyst\Core\Helper();
 
         $this->info('Generating permissions...');
 

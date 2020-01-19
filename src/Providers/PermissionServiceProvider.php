@@ -2,7 +2,7 @@
 
 namespace Amethyst\Providers;
 
-use Amethyst\Common\CommonServiceProvider;
+use Amethyst\Core\Providers\CommonServiceProvider;
 use Amethyst\Console\Commands;
 use Amethyst\Models\Ownable;
 use Amethyst\Models\Permission;
