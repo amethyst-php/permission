@@ -1,6 +1,6 @@
 # amethyst-permission
 
-[![Build Status](https://travis-ci.org/amethyst-php/permission.svg?branch=master)](https://travis-ci.org/amethyst-php/permission)
+[![Action Status](https://github.com/amethyst-php/permission/workflows/test/badge.svg)](https://github.com/amethyst-php/permission/actions)
 
 [Amethyst](https://github.com/amethyst-php/amethyst) package.
 
