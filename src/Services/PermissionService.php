@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 use nicoSWD\Rules\Rule;
 use Railken\Lem\Contracts\AgentContract;
 use Railken\Template\Generators;
+use Symfony\Component\Yaml\Yaml;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionService
 {
@@ -45,7 +47,7 @@ class PermissionService
     {
         $this->template = new Generators\TextGenerator();
         $this->manager = new PermissionManager();
-        $this->permission = collect();
+        $this->permissions = collect();
     }
 
     /**
@@ -61,48 +63,52 @@ class PermissionService
      */
     public function boot()
     {
-        $this->permissions = $this->manager->getRepository()->findBy([]);
+        $this->permissions = $this->manager->getRepository()->findBy([])->filter(function ($permission) {
+            $permission->payload = Yaml::parse($permission->payload);
+        })
 
         $this->cached = Cache::get('permissions');
+    }
+
+    public function getAgent()
+    {
+        return Auth::user();
     }
 
     /**
      * Get permission.
      *
-     * @param array         $names
-     * @param array         $actions
-     * @param AgentContract $agent
+     * @param array         $parameters
      *
      * @return bool
      */
-    public function permissions(array $names, array $actions, AgentContract $agent)
+    public function permissions(array $parameters)
     {
         if (!$this->permissions) {
             return collect();
         }
 
-        return $this->permissions->filter(function (Permission $model) use ($names, $actions, $agent) {
-            if (!array_intersect(array_merge([$this->wildcard], $names), explode($this->separator, $model->data))) {
+        return $this->permissions->filter(function (Permission $model) use ($parameters) {
+
+            $type = $this->types[$model->type];
+            
+            if (!$type->valid($model->payload, $parameters)) {
                 return false;
             }
 
-            if (!array_intersect(array_merge([$this->wildcard], $actions), explode($this->separator, $model->action))) {
-                return false;
+            if ($model->agent) {
+                $expression = $this->template->generateAndRender($model->agent, [
+                    'agent' => $this->getAgent(),
+                ]);
+
+                $rule = new Rule($expression, []);
+
+                if(!$rule->isTrue()) {
+                    return false;
+                }
             }
 
-            if (empty($model->agent)) {
-                return true;
-            }
-
-            \Log::info($model->agent);
-            $expression = $this->template->generateAndRender($model->agent, [
-                'agent' => $agent,
-            ]);
-            \Log::info($expression);
-
-            $rule = new Rule($expression, []);
-
-            return $rule->isTrue();
+            return false;
         });
     }
 
@@ -128,11 +134,9 @@ class PermissionService
                 return true;
             }
 
-            \Log::info($model->agent);
             $expression = $this->template->generateAndRender($model->agent, [
                 'agent' => $agent,
             ]);
-            \Log::info($expression);
 
             $rule = new Rule($expression, []);
 
@@ -178,15 +182,20 @@ class PermissionService
         return false;
     }
 
+    public function parsePayload($attr): array
+    {
+        return !is_array($attr) ? [$attr] : $attr;
+    }
+
     public function explodePermissions(Permission $model)
     {
         $r = [];
 
-        foreach (explode('|', $model->data) as $data) {
+        foreach ($this->parsePayload($model->payload->data) as $data) {
             $r = array_merge(
                 $r,
                 [$data],
-                preg_filter('/^/', $data.'.', explode('|', $model->action))
+                preg_filter('/^/', $data.'.', $this->parsePayload($model->payload->action)))
             );
         }
 

@@ -5,6 +5,7 @@ namespace Amethyst\Fakers;
 use Faker\Factory;
 use Railken\Bag;
 use Railken\Lem\Faker;
+use Symfony\Component\Yaml\Yaml;
 
 class PermissionFaker extends Faker
 {
@@ -16,10 +17,11 @@ class PermissionFaker extends Faker
         $faker = Factory::create();
 
         $bag = new Bag();
-        $bag->set('data', 'foo');
-        $bag->set('attribute', 'id|name|created_at|updated_at|deleted_at');
-        $bag->set('action', 'create|update|show|remove');
-        $bag->set('filter', 'id = 1');
+        $bag->set('effect', 'accept');
+        $bag->set('type', 'route');
+        $bag->set('payload', Yaml::dump([
+            'name' => 'foo'
+        ]));
         $bag->set('agent', '{{ agent.id }} == 1');
 
         return $bag;

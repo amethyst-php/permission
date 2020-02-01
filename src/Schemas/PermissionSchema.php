@@ -16,22 +16,12 @@ class PermissionSchema extends Schema
     {
         return [
             Attributes\UuidAttribute::make('id'),
-            Attributes\TextAttribute::make('data')
-                ->setDefault(function ($entity) {
-                    return '*';
-                })
+            Attributes\EnumAttribute::make('effect', ['allow', 'deny'])
+            	->setRequired(true),
+            Attributes\EnumAttribute::make('type', config('amethyst.permission.permissions'))
                 ->setRequired(true),
-            Attributes\TextAttribute::make('attribute')
-                ->setDefault(function ($entity) {
-                    return '*';
-                })
+            Attributes\YamlAttribute::make('payload')
                 ->setRequired(true),
-            Attributes\TextAttribute::make('action')
-                ->setDefault(function ($entity) {
-                    return '*';
-                })
-                ->setRequired(true),
-            Attributes\TextAttribute::make('filter'),
             Attributes\TextAttribute::make('agent'),
             Attributes\CreatedAtAttribute::make(),
             Attributes\UpdatedAtAttribute::make(),

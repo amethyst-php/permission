@@ -28,9 +28,13 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessCreationWithAll()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+                'attribute' => '*',
+            ])
         ]);
 
         $result = FooManager::make(new Agent())->create(FooFaker::make()->parameters());
@@ -40,9 +44,12 @@ class PermissionLogicTest extends BaseTest
     public function testFailCreationWithAgent()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 0',
         ]);
 
@@ -54,9 +61,12 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessCreationWithAgent()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -68,9 +78,12 @@ class PermissionLogicTest extends BaseTest
     public function testFailBarCreationWithAgentAndData()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => 'foo',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => 'foo',
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -82,9 +95,12 @@ class PermissionLogicTest extends BaseTest
     public function testFailCreationWithAgentAndData()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => 'foo|bar',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => ['foo', 'bar'],
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -96,9 +112,12 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessCreationWithAgentAndAction()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => 'foo|bar',
-            'action'    => 'create|attributes.*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => ['foo', 'bar'],
+                'action'    => ['create', 'attributes.*'],
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -121,9 +140,12 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -139,9 +161,12 @@ class PermissionLogicTest extends BaseTest
     public function testFailDataFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => 'bar',
-            'action'    => '*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => 'bar',
+                'action'    => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -157,10 +182,13 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
-            'filter'    => 'id = 1',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+                'filter'    => 'id = 1',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -176,10 +204,13 @@ class PermissionLogicTest extends BaseTest
     public function testWrongFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
-            'filter'    => 'id = 2',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+                'filter'    => 'id = 2',
+            ])
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -195,10 +226,13 @@ class PermissionLogicTest extends BaseTest
     public function testSuccess1FilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => '*',
-            'attribute' => '*',
-            'filter'    => 'bar.id = 1',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => '*',
+                'filter'    => 'bar.id = 1',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ]);
 
@@ -214,9 +248,12 @@ class PermissionLogicTest extends BaseTest
     public function testCollisionBetweenTwoAgents()
     {
         app(PermissionManager::class)->createOrFail([
-            'data'      => '*',
-            'action'    => 'create,attributes.*',
-            'attribute' => '*',
+            'effect' => 'accept',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => ['create', 'attributes.*'],
+            ]),
         ]);
 
         $result1 = FooManager::make(new Agent(1))->create(FooFaker::make()->parameters());

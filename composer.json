@@ -13,7 +13,8 @@
     "require-dev": {
         "phpunit/phpunit": "*",
         "orchestra/testbench": "*",
-        "amethyst/foo": "0.2.*"
+        "amethyst/foo": "0.2.*",
+        "amethyst/user": "0.2.*"
     },
     "autoload": {
         "psr-4" : {

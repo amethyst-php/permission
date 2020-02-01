@@ -1,6 +1,6 @@
 <?php
 
-namespace Amethyst\Scopes;
+namespace Amethyst\Permission\Data;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,14 +19,13 @@ class PermissionScope
      */
     public function apply(ManagerContract $manager, $builder, Model $model = null): void
     {
-        $agent = $manager->getAgent();
+        $agent = Auth::user();
 
-        if ($agent instanceof SystemAgent) {
+        if (!$agent) {
             return;
         }
 
         $name = app('amethyst')->tableize($manager->getEntity());
-
 
         // $tableName = $builder->getQuery()->from;
 
@@ -45,19 +44,15 @@ class PermissionScope
 
         if ($filteredPermissions->count() === $permissions->count()) {
             $strFilter = $filteredPermissions->map(function ($permission) {
-                return "( $permission->filter )";
+                return "( {$permission->payload->filter} )";
             })->implode(' or ');
 
             $strFilter = app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
                 'agent' => $agent,
             ]);
 
-            app('amethyst')->filter(
-                $builder, 
-                $strFilter, 
-                $manager->newEntity(), 
-                $manager->getAgent()
-            );
+            $scope = new FilterScope;
+            $scope->apply($query, $strFilter);
         }
 
         /*
