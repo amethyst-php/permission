@@ -20,7 +20,7 @@ class PermissionFaker extends Faker
         $bag->set('effect', 'accept');
         $bag->set('type', 'route');
         $bag->set('payload', Yaml::dump([
-            'name' => 'foo'
+            'name' => 'foo',
         ]));
         $bag->set('agent', '{{ agent.id }} == 1');
 

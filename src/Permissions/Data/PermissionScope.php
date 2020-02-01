@@ -5,10 +5,8 @@ namespace Amethyst\Permission\Data;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Railken\LaraEye\Filter;
-use Railken\Lem\Agents\SystemAgent;
-use Railken\Lem\Contracts\ManagerContract;
 use Railken\EloquentMapper\Scopes\FilterScope;
+use Railken\Lem\Contracts\ManagerContract;
 
 class PermissionScope
 {
@@ -33,7 +31,6 @@ class PermissionScope
 
         // No permissions means no query
         if ($permissions->count() === 0) {
-
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
         }
@@ -51,7 +48,7 @@ class PermissionScope
                 'agent' => $agent,
             ]);
 
-            $scope = new FilterScope;
+            $scope = new FilterScope();
             $scope->apply($query, $strFilter);
         }
 

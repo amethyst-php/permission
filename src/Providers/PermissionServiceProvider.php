@@ -2,9 +2,8 @@
 
 namespace Amethyst\Providers;
 
-use Amethyst\Core\Providers\CommonServiceProvider;
 use Amethyst\Console\Commands;
-use Amethyst\Models\Ownable;
+use Amethyst\Core\Providers\CommonServiceProvider;
 use Amethyst\Models\Permission;
 use Amethyst\Observers\PermissionObserver;
 use Illuminate\Support\Facades\Config;
@@ -42,7 +41,7 @@ class PermissionServiceProvider extends CommonServiceProvider
         if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
             app('amethyst.permission')->boot();
         }
-        
+
         $this->app->booted(function () {
             \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\Data\PermissionScope());
         });
