@@ -17,7 +17,7 @@ class PermissionFaker extends Faker
         $faker = Factory::create();
 
         $bag = new Bag();
-        $bag->set('effect', 'accept');
+        $bag->set('effect', 'allow');
         $bag->set('type', 'route');
         $bag->set('payload', Yaml::dump([
             'name' => 'foo',

@@ -3,11 +3,9 @@
 namespace Amethyst\Permissions;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Railken\EloquentMapper\Scopes\FilterScope;
-use Railken\Lem\Contracts\ManagerContract;
 use Illuminate\Support\Facades\Auth;
+use Railken\EloquentMapper\Scopes\FilterScope;
 
 class PermissionScope
 {
@@ -28,31 +26,30 @@ class PermissionScope
 
         // $tableName = $builder->getQuery()->from;
 
-        $permissions = app('amethyst.permission.data')->getPermissionsByData($agent, ['query'], [$name]);
+        $permissions = app('amethyst.permission.data')->getPermissionsByDataAndAction($agent, ['query'], [$name]);
 
         // No permissions means no authorization
         if ($permissions->count() === 0) {
-
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
+
+            return;
         }
 
         $filteredPermissions = $permissions->filter(function ($permission) {
-            return !empty($permission->filter);
+            return !empty($permission->parsed->filter);
         });
 
-        if ($filteredPermissions->count() === $permissions->count()) {
-            $strFilter = $filteredPermissions->map(function ($permission) {
-                return "( {$permission->payload->filter} )";
-            })->implode(' or ');
+        $strFilter = $filteredPermissions->map(function ($permission) {
+            return "( {$permission->parsed->filter} )";
+        })->implode(' or ');
 
-            $strFilter = app('amethyst.permission.data')->getDictionary()->getTemplate()->generateAndRender($strFilter, [
-                'agent' => $agent,
-            ]);
+        $strFilter = app('amethyst.permission.data')->getDictionary()->getTemplate()->generateAndRender($strFilter, [
+            'agent' => $agent,
+        ]);
 
-            $scope = new FilterScope();
-            $scope->apply($builder, $strFilter);
-        }
+        $scope = new FilterScope();
+        $scope->apply($builder, $strFilter);
 
         /*
         $select = [];

@@ -2,14 +2,6 @@
 
 namespace Amethyst\Permissions;
 
-use Amethyst\Models\Permission;
-use Illuminate\Support\Facades\Cache;
-use nicoSWD\Rules\Rule;
-use Railken\Lem\Contracts\AgentContract;
-use Railken\Template\Generators;
-use Symfony\Component\Yaml\Yaml;
-use Illuminate\Database\Eloquent\Model;
-
 trait MatchDotNotation
 {
     /**
@@ -25,12 +17,12 @@ trait MatchDotNotation
     public function match(string $needle, array $stack, string $wildcard = '*', string $separator = '.')
     {
         $pp = explode($separator, $needle);
-        
+
         foreach ($stack as $p) {
             if ($needle == $p) {
                 return true;
             }
-            
+
             $p = explode($separator, $p);
 
             foreach ($p as $k => $in) {

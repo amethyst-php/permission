@@ -2,13 +2,7 @@
 
 namespace Amethyst\Permissions;
 
-use Amethyst\Managers\PermissionManager;
 use Amethyst\Models\Permission;
-use Illuminate\Support\Facades\Cache;
-use nicoSWD\Rules\Rule;
-use Railken\Lem\Contracts\AgentContract;
-use Railken\Template\Generators;
-use Symfony\Component\Yaml\Yaml;
 use Illuminate\Database\Eloquent\Model;
 
 class PermissionStore implements PermissionStoreContract
@@ -19,7 +13,7 @@ class PermissionStore implements PermissionStoreContract
     protected $items;
 
     /**
-     * Create a new instance
+     * Create a new instance.
      */
     public function __construct()
     {
@@ -27,11 +21,11 @@ class PermissionStore implements PermissionStoreContract
     }
 
     /**
-     * Set item
+     * Set item.
      *
-     * @param Model $agent
+     * @param Model  $agent
      * @param string $permission
-     * @param bool $value
+     * @param bool   $value
      */
     public function set(Model $agent, string $permission, bool $value)
     {
@@ -39,9 +33,9 @@ class PermissionStore implements PermissionStoreContract
     }
 
     /**
-     * Retrieve item
+     * Retrieve item.
      *
-     * @param Model $agent
+     * @param Model  $agent
      * @param string $permission
      *
      * @return bool
@@ -52,9 +46,9 @@ class PermissionStore implements PermissionStoreContract
     }
 
     /**
-     * Create a key given agent and permission
+     * Create a key given agent and permission.
      *
-     * @param Model $agent
+     * @param Model  $agent
      * @param string $Permission
      *
      * @return string
@@ -65,11 +59,11 @@ class PermissionStore implements PermissionStoreContract
             throw new PermissionStoreMissingAgentIdException();
         }
 
-        return $agent->id.":".$permission;
+        return $agent->id.':'.$permission;
     }
 
     /**
-     * Reset items
+     * Reset items.
      */
     public function reset()
     {

@@ -3,20 +3,16 @@
 namespace Amethyst\Permissions;
 
 use Amethyst\Models\Permission;
-use Illuminate\Support\Facades\Cache;
-use nicoSWD\Rules\Rule;
-use Railken\Lem\Contracts\AgentContract;
-use Railken\Template\Generators;
-use Symfony\Component\Yaml\Yaml;
 use Illuminate\Database\Eloquent\Model;
+use nicoSWD\Rules\Rule;
 
 trait IsAgent
 {
     /**
-     * Return if the permission is related to the current agent
+     * Return if the permission is related to the current agent.
      *
      * @param Permission $model
-     * @param Model $agent
+     * @param Model      $agent
      *
      * @return bool
      */

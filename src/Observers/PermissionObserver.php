@@ -3,8 +3,8 @@
 namespace Amethyst\Observers;
 
 use Amethyst\Models\Permission;
-use Amethyst\Permissions\PermissionStoreContract;
 use Amethyst\Permissions\PermissionDictionaryContract;
+use Amethyst\Permissions\PermissionStoreContract;
 
 class PermissionObserver
 {

@@ -2,8 +2,11 @@
 
 namespace Amethyst\Tests;
 
-use Amethyst\Permissions\PermissionStoreContract;
+use Amethyst\Models\Bar;
+use Amethyst\Models\Foo;
+use Amethyst\Models\Ownable;
 use Amethyst\Permissions\PermissionDictionaryContract;
+use Amethyst\Permissions\PermissionStoreContract;
 
 abstract class BaseTest extends \Orchestra\Testbench\TestCase
 {
@@ -20,6 +23,12 @@ abstract class BaseTest extends \Orchestra\Testbench\TestCase
         app(PermissionDictionaryContract::class)->boot();
 
         // $this->artisan('amethyst:permission:flush');
+
+        Bar::morph_many('ownables', Ownable::class, 'ownable');
+        Foo::morph_many('ownables', Ownable::class, 'ownable');
+        $this->artisan('mapper:generate');
+        \Railken\Lem\Repository::resetScopes();
+        \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
     }
 
     protected function getPackageProviders($app)

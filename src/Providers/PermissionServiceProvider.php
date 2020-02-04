@@ -6,12 +6,10 @@ use Amethyst\Console\Commands;
 use Amethyst\Core\Providers\CommonServiceProvider;
 use Amethyst\Models\Permission;
 use Amethyst\Observers\PermissionObserver;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Schema;
-use Amethyst\Permissions\PermissionStoreContract;
+use Amethyst\Permissions\PermissionDictionary;
 use Amethyst\Permissions\PermissionDictionaryContract;
 use Amethyst\Permissions\PermissionStore;
-use Amethyst\Permissions\PermissionDictionary;
+use Amethyst\Permissions\PermissionStoreContract;
 
 class PermissionServiceProvider extends CommonServiceProvider
 {
@@ -52,8 +50,6 @@ class PermissionServiceProvider extends CommonServiceProvider
 
         Permission::observe(PermissionObserver::class);
 
-        $this->app->booted(function () {
-            \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
-        });
+        \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
     }
 }

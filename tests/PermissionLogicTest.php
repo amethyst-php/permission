@@ -5,9 +5,8 @@ namespace Amethyst\Tests;
 use Amethyst\Fakers\FooFaker;
 use Amethyst\Managers\FooManager;
 use Amethyst\Managers\PermissionManager;
-use Amethyst\Permissions\PermissionScope;
-use Symfony\Component\Yaml\Yaml;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\Yaml\Yaml;
 
 class PermissionLogicTest extends BaseTest
 {
@@ -42,17 +41,16 @@ class PermissionLogicTest extends BaseTest
         print_r(app('amethyst.permission.data')->getDictionary()->getPermissionsByType(['data']));
     }*/
 
-
     public function testSuccessCreationWithAll()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
                 'data'      => '*',
                 'action'    => '*',
                 'attribute' => '*',
-            ])
+            ]),
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -62,13 +60,13 @@ class PermissionLogicTest extends BaseTest
     public function testFailCreationWithAgent()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
+                'data'   => '*',
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 0',
+            'agent' => '{{ agent.id }} == 0',
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -79,13 +77,13 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessCreationWithAgent()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
+                'data'   => '*',
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -96,13 +94,13 @@ class PermissionLogicTest extends BaseTest
     public function testFailBarCreationWithAgentAndData()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => 'foo',
-                'action'    => '*',
+                'data'   => 'foo',
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -113,13 +111,13 @@ class PermissionLogicTest extends BaseTest
     public function testFailCreationWithAgentAndData()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => ['foo', 'bar'],
-                'action'    => '*',
+                'data'   => ['foo', 'bar'],
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -130,13 +128,13 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessCreationWithAgentAndAction()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => ['foo', 'bar'],
-                'action'    => ['create', 'attributes.*'],
+                'data'   => ['foo', 'bar'],
+                'action' => ['create', 'attributes.*'],
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
         $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
@@ -146,11 +144,9 @@ class PermissionLogicTest extends BaseTest
 
     public function testFailQuery()
     {
-        $result = FooManager::make()->create(FooFaker::make()->parameters());
+        $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -158,20 +154,18 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
+                'data'   => '*',
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
         $result = FooManager::make()->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(1, $query->count());
     }
@@ -179,20 +173,18 @@ class PermissionLogicTest extends BaseTest
     public function testFailDataFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => 'bar',
-                'action'    => '*',
+                'data'   => 'bar',
+                'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
-        $result = FooManager::make()->create(FooFaker::make()->parameters());
+        $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -200,21 +192,19 @@ class PermissionLogicTest extends BaseTest
     public function testSuccessFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
-                'filter'    => 'id = 1',
+                'data'   => '*',
+                'action' => '*',
+                'filter' => 'id = 1',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
-        $result = FooManager::make()->create(FooFaker::make()->parameters());
+        $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(1, $query->count());
     }
@@ -222,21 +212,19 @@ class PermissionLogicTest extends BaseTest
     public function testWrongFilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
-                'filter'    => 'id = 2',
+                'data'   => '*',
+                'action' => '*',
+                'filter' => 'id = 2',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
-        $result = FooManager::make()->create(FooFaker::make()->parameters());
+        $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(0, $query->count());
     }
@@ -244,21 +232,29 @@ class PermissionLogicTest extends BaseTest
     public function testSuccess1FilterQuery()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => '*',
-                'filter'    => 'bar.id = 1',
+                'data'   => 'foo',
+                'action' => '*',
+                'filter' => 'bar.id = 1',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ]);
 
-        $result = FooManager::make()->create(FooFaker::make()->parameters());
+        app(PermissionManager::class)->createOrFail([
+            'effect'  => 'allow',
+            'type'    => 'data',
+            'payload' => Yaml::dump([
+                'data'   => 'bar',
+                'action' => '*',
+                'filter' => 'id = 1',
+            ]),
+            'agent' => '{{ agent.id }} == 1',
+        ]);
+        $result = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
 
         $query = FooManager::make()->getRepository()->newQuery();
-
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
 
         $this->assertEquals(1, $query->count());
     }
@@ -266,15 +262,24 @@ class PermissionLogicTest extends BaseTest
     public function testCollisionBetweenTwoAgents()
     {
         app(PermissionManager::class)->createOrFail([
-            'effect' => 'allow',
-            'type' => 'data',
+            'effect'  => 'allow',
+            'type'    => 'data',
             'payload' => Yaml::dump([
-                'data'      => '*',
-                'action'    => ['create', 'attributes.*'],
+                'data'   => '*',
+                'action' => ['create', 'attributes.*'],
             ]),
         ]);
 
-        
+        app(PermissionManager::class)->createOrFail([
+            'effect'  => 'allow',
+            'type'    => 'data',
+            'payload' => Yaml::dump([
+                'data'   => '*',
+                'action' => 'query',
+                'filter' => 'ownables.owner_id = {{ agent.id }}',
+            ]),
+        ]);
+
         $result1 = FooManager::make($this->authenticateAs(['id' => 1]))->create(FooFaker::make()->parameters());
         $this->assertEquals(true, $result1->ok());
 
@@ -284,12 +289,10 @@ class PermissionLogicTest extends BaseTest
         $this->assertEquals(true, $result2b->ok());
 
         // Agent 1 should see only result 1 and agent 2 only 2a and 2b.
-        $query = FooManager::make()->getRepository()->newQuery();
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
+        $query = FooManager::make($this->authenticateAs(['id' => 1]))->getRepository()->newQuery();
         $this->assertEquals(1, $query->count());
 
-        $query = FooManager::make()->getRepository()->newQuery();
-        (new PermissionScope())->apply(FooManager::make($this->authenticateAs(['id' => 1])), $query);
+        $query = FooManager::make($this->authenticateAs(['id' => 2]))->getRepository()->newQuery();
         $this->assertEquals(2, $query->count());
     }
 

@@ -3,15 +3,11 @@
 namespace Amethyst\Permissions;
 
 use Amethyst\Managers\PermissionManager;
-use Amethyst\Models\Permission;
-use Illuminate\Support\Facades\Cache;
-use nicoSWD\Rules\Rule;
-use Railken\Lem\Contracts\AgentContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Railken\Template\Generators;
 use Symfony\Component\Yaml\Yaml;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Collection;
 
 class PermissionDictionary implements PermissionDictionaryContract
 {
@@ -59,7 +55,6 @@ class PermissionDictionary implements PermissionDictionaryContract
     public function boot()
     {
         $this->permissions = $this->manager->getRepository()->findBy([])->map(function ($permission) {
-
             $payload = Yaml::parse($permission->payload, Yaml::PARSE_OBJECT_FOR_MAP);
 
             $permission->parsed = $payload;
@@ -89,7 +84,7 @@ class PermissionDictionary implements PermissionDictionaryContract
     }
 
     /**
-     * Get wildcard
+     * Get wildcard.
      *
      * @return string
      */
@@ -101,7 +96,7 @@ class PermissionDictionary implements PermissionDictionaryContract
     public function getPermissionsByType(array $types): Collection
     {
         return $this->permissions->filter(function ($permission) use ($types) {
-            return in_array($permission->type, $types);
+            return in_array($permission->type, $types, true);
         });
     }
 }

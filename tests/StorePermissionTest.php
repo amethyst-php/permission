@@ -2,8 +2,8 @@
 
 namespace Amethyst\Tests;
 
-use Amethyst\Permissions\PermissionStoreMissingAgentIdException;
 use Amethyst\Permissions\PermissionStore;
+use Amethyst\Permissions\PermissionStoreMissingAgentIdException;
 
 class StorePermissionTest extends BaseTest
 {
@@ -14,13 +14,13 @@ class StorePermissionTest extends BaseTest
         $agent = new Agent();
         $agent->id = 1;
 
-        $this->assertEquals(null, $store->get($agent, "basic"));
+        $this->assertEquals(null, $store->get($agent, 'basic'));
 
         $store->set($agent, 'basic', true);
-        $this->assertEquals(true, $store->get($agent, "basic"));
+        $this->assertEquals(true, $store->get($agent, 'basic'));
 
         $store->set($agent, 'basic', false);
-        $this->assertEquals(false, $store->get($agent, "basic"));
+        $this->assertEquals(false, $store->get($agent, 'basic'));
     }
 
     public function testAgentMissingId()
@@ -31,6 +31,6 @@ class StorePermissionTest extends BaseTest
 
         $agent = new Agent();
 
-        $this->assertEquals(null, $store->get($agent, "basic"));
+        $this->assertEquals(null, $store->get($agent, 'basic'));
     }
 }
