@@ -8,6 +8,10 @@ use Amethyst\Models\Permission;
 use Amethyst\Observers\PermissionObserver;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
+use Amethyst\Permissions\PermissionStoreContract;
+use Amethyst\Permissions\PermissionDictionaryContract;
+use Amethyst\Permissions\PermissionStore;
+use Amethyst\Permissions\PermissionDictionary;
 
 class PermissionServiceProvider extends CommonServiceProvider
 {
@@ -24,8 +28,18 @@ class PermissionServiceProvider extends CommonServiceProvider
         $this->app->register(\Railken\Template\TemplateServiceProvider::class);
         $this->app->register(\Amethyst\Providers\OwnerServiceProvider::class);
 
-        $this->app->singleton('amethyst.permission', function ($app) {
-            return new \Amethyst\Services\PermissionService();
+        $this->app->singleton(
+            PermissionStoreContract::class,
+            PermissionStore::class
+        );
+
+        $this->app->singleton(
+            PermissionDictionaryContract::class,
+            PermissionDictionary::class
+        );
+
+        $this->app->singleton('amethyst.permission.data', function ($app) {
+            return $this->app->make(\Amethyst\Permissions\DataPermission::class);
         });
     }
 
@@ -38,12 +52,8 @@ class PermissionServiceProvider extends CommonServiceProvider
 
         Permission::observe(PermissionObserver::class);
 
-        if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
-            app('amethyst.permission')->boot();
-        }
-
         $this->app->booted(function () {
-            \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\Data\PermissionScope());
+            \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
         });
     }
 }

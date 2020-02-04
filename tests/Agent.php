@@ -4,14 +4,12 @@ namespace Amethyst\Tests;
 
 use Amethyst\Traits\PermissionTrait;
 use Railken\Lem\Contracts\AgentContract;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Agent implements AgentContract
+class Agent extends Authenticatable implements AgentContract
 {
     use PermissionTrait;
-    public $id;
 
-    public function __construct($id = 1)
-    {
-        $this->id = $id;
-    }
+    public $fillable = ['id'];
 }

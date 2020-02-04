@@ -16,10 +16,9 @@ class CreatePermissionsTable extends Migration
             $table->uuid('id');
             $table->primary('id');
 
-            $table->string('data');
-            $table->string('action');
-            $table->string('attribute');
-            $table->string('filter')->nullable();
+            $table->string('type');
+            $table->string('effect');
+            $table->text('payload');
             $table->string('agent')->nullable();
 
             $table->timestamps();

@@ -39,6 +39,17 @@ class FlushPermissionsCommand extends Command
             'agent'     => '{{ agent.id }} == 1',
         ])->getResource();
 
+        // Everything that is owned, should be allowed to query.
+        app(Managers\PermissionManager::class)->createOrFail([
+            'effect' => 'allow',
+            'type' => 'data',
+            'payload' => Yaml::dump([
+                'data'      => '*',
+                'action'    => 'query',
+                'filter'    => 'ownables.owner_id = {{ agent.id }}',
+            ]),
+        ]);
+
         $this->info('Done!');
     }
 }

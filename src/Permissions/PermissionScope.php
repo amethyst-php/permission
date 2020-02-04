@@ -1,12 +1,13 @@
 <?php
 
-namespace Amethyst\Permission\Data;
+namespace Amethyst\Permissions;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Railken\EloquentMapper\Scopes\FilterScope;
 use Railken\Lem\Contracts\ManagerContract;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionScope
 {
@@ -15,7 +16,7 @@ class PermissionScope
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
      */
-    public function apply(ManagerContract $manager, $builder, Model $model = null): void
+    public function apply($manager, $builder): void
     {
         $agent = Auth::user();
 
@@ -23,14 +24,15 @@ class PermissionScope
             return;
         }
 
-        $name = app('amethyst')->tableize($manager->getEntity());
+        $name = app('amethyst')->getNameDataByModel(get_class($builder->getModel()));
 
         // $tableName = $builder->getQuery()->from;
 
-        $permissions = app('amethyst.permission')->permissions([$name], ['query'], $agent);
+        $permissions = app('amethyst.permission.data')->getPermissionsByData($agent, ['query'], [$name]);
 
-        // No permissions means no query
+        // No permissions means no authorization
         if ($permissions->count() === 0) {
+
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
         }
@@ -44,12 +46,12 @@ class PermissionScope
                 return "( {$permission->payload->filter} )";
             })->implode(' or ');
 
-            $strFilter = app('amethyst.permission')->getTemplate()->generateAndRender($strFilter, [
+            $strFilter = app('amethyst.permission.data')->getDictionary()->getTemplate()->generateAndRender($strFilter, [
                 'agent' => $agent,
             ]);
 
             $scope = new FilterScope();
-            $scope->apply($query, $strFilter);
+            $scope->apply($builder, $strFilter);
         }
 
         /*

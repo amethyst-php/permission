@@ -14,6 +14,6 @@ trait PermissionTrait
      */
     public function can($permission, $arguments = [])
     {
-        return app('amethyst.permission')->can($this, $permission, $arguments);
+        return app('amethyst.permission.data')->can($this, $permission, $arguments);
     }
 }

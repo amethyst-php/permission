@@ -3,6 +3,8 @@
 namespace Amethyst\Observers;
 
 use Amethyst\Models\Permission;
+use Amethyst\Permissions\PermissionStoreContract;
+use Amethyst\Permissions\PermissionDictionaryContract;
 
 class PermissionObserver
 {
@@ -13,7 +15,8 @@ class PermissionObserver
      */
     public function created(Permission $permission)
     {
-        app('amethyst.permission')->boot();
+        app(PermissionStoreContract::class)->reset();
+        app(PermissionDictionaryContract::class)->boot();
     }
 
     /**
@@ -23,7 +26,8 @@ class PermissionObserver
      */
     public function updated(Permission $permission)
     {
-        app('amethyst.permission')->boot();
+        app(PermissionStoreContract::class)->reset();
+        app(PermissionDictionaryContract::class)->boot();
     }
 
     /**
@@ -33,6 +37,7 @@ class PermissionObserver
      */
     public function deleted(Permission $permission)
     {
-        app('amethyst.permission')->boot();
+        app(PermissionStoreContract::class)->reset();
+        app(PermissionDictionaryContract::class)->boot();
     }
 }

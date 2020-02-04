@@ -18,7 +18,7 @@ class PermissionSchema extends Schema
             Attributes\UuidAttribute::make('id'),
             Attributes\EnumAttribute::make('effect', ['allow', 'deny'])
                 ->setRequired(true),
-            Attributes\EnumAttribute::make('type', config('amethyst.permission.permissions'))
+            Attributes\EnumAttribute::make('type', ['data', 'route'])
                 ->setRequired(true),
             Attributes\YamlAttribute::make('payload')
                 ->setRequired(true),

@@ -2,6 +2,9 @@
 
 namespace Amethyst\Tests;
 
+use Amethyst\Permissions\PermissionStoreContract;
+use Amethyst\Permissions\PermissionDictionaryContract;
+
 abstract class BaseTest extends \Orchestra\Testbench\TestCase
 {
     /**
@@ -12,8 +15,9 @@ abstract class BaseTest extends \Orchestra\Testbench\TestCase
         parent::setUp();
 
         $this->artisan('migrate:fresh');
-        app('amethyst.permission')->boot();
-        app('eloquent.mapper')->boot();
+
+        app(PermissionStoreContract::class)->reset();
+        app(PermissionDictionaryContract::class)->boot();
 
         // $this->artisan('amethyst:permission:flush');
     }
