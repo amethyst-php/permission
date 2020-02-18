@@ -4,6 +4,7 @@ namespace Amethyst\Console\Commands;
 
 use Amethyst\Managers;
 use Illuminate\Console\Command;
+use Symfony\Component\Yaml\Yaml;
 
 class FlushPermissionsCommand extends Command
 {
@@ -32,10 +33,14 @@ class FlushPermissionsCommand extends Command
 
         $this->info('Generating permissions...');
 
+        // Allow user.id for everything.
         $admin = app(Managers\PermissionManager::class)->findOrCreate([
-            'data'      => '*',
-            'attribute' => '*',
-            'action'    => '*',
+            'effect'  => 'allow',
+            'type'    => 'data',
+            'payload' => Yaml::dump([
+                'data'   => '*',
+                'action' => '*',
+            ]),
             'agent'     => '{{ agent.id }} == 1',
         ])->getResource();
 

@@ -6,59 +6,8 @@ use Amethyst\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class DataPermission
+class DataPermission extends BasePermission
 {
-    use IsAgent;
-    use MatchDotNotation;
-
-    /**
-     * @var PermissionDictionaryContract
-     */
-    protected $dictionary;
-
-    /**
-     * @var PermissionStoreContract
-     */
-    protected $store;
-
-    /**
-     * Create a new instance.
-     *
-     * @param PermissionDictionary $dictionary
-     */
-    public function __construct(PermissionDictionaryContract $dictionary, PermissionStoreContract $store)
-    {
-        $this->dictionary = $dictionary;
-        $this->store = $store;
-    }
-
-    /**
-     * Given agent retrieve a list of permissions.
-     *
-     * @param Model $agent
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function permissions(Model $agent, array $types = ['data']): Collection
-    {
-        return $this->dictionary->getPermissionsByType($types)->filter(function (Permission $model) use ($agent) {
-            return $this->isRelatedAgent($model, $agent);
-        });
-    }
-
-    public function getPermissionsByDataAndAction(Model $agent, array $actions = [], array $data = []): Collection
-    {
-        return $this->permissions($agent)->filter(function (Permission $model) use ($data) {
-            $stack = $this->parsePayload($model->parsed->data);
-
-            return $stack[0] === '*' || count(array_intersect($data, $stack)) > 0;
-        })->filter(function (Permission $model) use ($actions) {
-            $stack = $this->parsePayload($model->parsed->action);
-
-            return $stack[0] === '*' || count(array_intersect($actions, $stack)) > 0;
-        });
-    }
 
     /**
      * Has the agent the correct permission?
@@ -84,6 +33,33 @@ class DataPermission
         $this->store->set($agent, $permission, $permissions !== null);
 
         return $permissions !== null;
+    }
+    
+    /**
+     * Given agent retrieve a list of permissions.
+     *
+     * @param Model $agent
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function permissions(Model $agent, array $types = ['data']): Collection
+    {
+        return $this->dictionary->getPermissionsByType($types)->filter(function (Permission $model) use ($agent) {
+            return $this->isRelatedAgent($model, $agent);
+        });
+    }
+
+    public function getPermissionsByDataAndAction(Model $agent, array $actions = [], array $data = []): Collection
+    {
+        return $this->permissions($agent)->filter(function (Permission $model) use ($data) {
+            $stack = $this->parsePayload($model->parsed->data);
+            return $stack[0] === '*' || count(array_intersect($data, $stack)) > 0;
+        })->filter(function (Permission $model) use ($actions) {
+            $stack = $this->parsePayload($model->parsed->action);
+
+            return $stack[0] === '*' || count(array_intersect($actions, $stack)) > 0;
+        });
     }
 
     /**

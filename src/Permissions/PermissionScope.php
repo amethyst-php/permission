@@ -28,6 +28,7 @@ class PermissionScope
 
         $permissions = app('amethyst.permission.data')->getPermissionsByDataAndAction($agent, ['query'], [$name]);
 
+
         // No permissions means no authorization
         if ($permissions->count() === 0) {
             // i think this shit is bad.
@@ -36,9 +37,18 @@ class PermissionScope
             return;
         }
 
+        $unfilteredPermissions = $permissions->filter(function ($permission) {
+            return empty($permission->parsed->filter);
+        });
+
+        if ($unfilteredPermissions->count() > 0) {
+            return;
+        }
+
         $filteredPermissions = $permissions->filter(function ($permission) {
             return !empty($permission->parsed->filter);
         });
+
 
         $strFilter = $filteredPermissions->map(function ($permission) {
             return "( {$permission->parsed->filter} )";

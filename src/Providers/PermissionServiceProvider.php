@@ -10,6 +10,8 @@ use Amethyst\Permissions\PermissionDictionary;
 use Amethyst\Permissions\PermissionDictionaryContract;
 use Amethyst\Permissions\PermissionStore;
 use Amethyst\Permissions\PermissionStoreContract;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 
 class PermissionServiceProvider extends CommonServiceProvider
 {
@@ -39,6 +41,10 @@ class PermissionServiceProvider extends CommonServiceProvider
         $this->app->singleton('amethyst.permission.data', function ($app) {
             return $this->app->make(\Amethyst\Permissions\DataPermission::class);
         });
+
+        $this->app->singleton('amethyst.permission.route', function ($app) {
+            return $this->app->make(\Amethyst\Permissions\RoutePermission::class);
+        });
     }
 
     /**
@@ -48,8 +54,13 @@ class PermissionServiceProvider extends CommonServiceProvider
     {
         parent::boot();
 
-        Permission::observe(PermissionObserver::class);
+        if (Schema::hasTable(Config::get('amethyst.permission.data.permission.table'))) {
+            Permission::observe(PermissionObserver::class);
 
-        \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
+            \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
+            
+            app(PermissionStoreContract::class)->reset();
+            app(PermissionDictionaryContract::class)->boot();
+        }
     }
 }

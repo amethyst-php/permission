@@ -8,7 +8,7 @@ use Amethyst\Managers\PermissionManager;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Yaml\Yaml;
 
-class PermissionLogicTest extends BaseTest
+class PermissionDataTest extends BaseTest
 {
     /**
      * Setup the test environment.
