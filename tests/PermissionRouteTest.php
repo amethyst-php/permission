@@ -2,11 +2,6 @@
 
 namespace Amethyst\Tests;
 
-use Amethyst\Fakers\FooFaker;
-use Amethyst\Managers\FooManager;
-use Amethyst\Managers\PermissionManager;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\Yaml\Yaml;
 use Illuminate\Support\Facades\Route;
 
 class PermissionRouteTest extends BaseTest
@@ -25,7 +20,7 @@ class PermissionRouteTest extends BaseTest
 
     public function testPermissionDenied()
     {
-        $response = $this->call('GET', "/foo", []);
+        $response = $this->call('GET', '/foo', []);
 
         $response->assertStatus(404);
     }

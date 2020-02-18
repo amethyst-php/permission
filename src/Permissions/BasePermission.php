@@ -2,15 +2,11 @@
 
 namespace Amethyst\Permissions;
 
-use Amethyst\Models\Permission;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-
 class BasePermission
 {
     use IsAgent;
     use MatchDotNotation;
-    
+
     /**
      * @var PermissionDictionaryContract
      */

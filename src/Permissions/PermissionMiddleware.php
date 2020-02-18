@@ -2,7 +2,6 @@
 
 namespace Amethyst\Permissions;
 
-use Amethyst\Models\Permission;
 use Closure;
 
 class PermissionMiddleware

@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class DataPermission extends BasePermission
 {
-
     /**
      * Has the agent the correct permission?
      *
@@ -34,7 +33,7 @@ class DataPermission extends BasePermission
 
         return $permissions !== null;
     }
-    
+
     /**
      * Given agent retrieve a list of permissions.
      *
@@ -54,6 +53,7 @@ class DataPermission extends BasePermission
     {
         return $this->permissions($agent)->filter(function (Permission $model) use ($data) {
             $stack = $this->parsePayload($model->parsed->data);
+
             return $stack[0] === '*' || count(array_intersect($data, $stack)) > 0;
         })->filter(function (Permission $model) use ($actions) {
             $stack = $this->parsePayload($model->parsed->action);

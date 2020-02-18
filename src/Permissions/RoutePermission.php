@@ -4,7 +4,6 @@ namespace Amethyst\Permissions;
 
 use Amethyst\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 
 class RoutePermission extends BasePermission
@@ -12,7 +11,7 @@ class RoutePermission extends BasePermission
     /**
      * Has the agent the correct permission?
      *
-     * @param Model  $agent
+     * @param Model   $agent
      * @param Request $request
      *
      * @return bool
@@ -41,14 +40,14 @@ class RoutePermission extends BasePermission
      */
     public function getPrimaryKeyByRequest(Request $request): string
     {
-        return $request->method()."|".$request->url();
+        return $request->method().'|'.$request->url();
     }
 
     /**
      * is related permission.
      *
      * @param Permission $model
-     * @param Request     $request
+     * @param Request    $request
      *
      * @return bool
      */
@@ -74,7 +73,7 @@ class RoutePermission extends BasePermission
     public function invalidUrl(string $needle, array $container): bool
     {
         foreach ($container as $item) {
-            if (preg_match("/".$item."/", $needle)) {
+            if (preg_match('/'.$item.'/', $needle)) {
                 return true;
             }
         }
@@ -92,12 +91,10 @@ class RoutePermission extends BasePermission
             return true;
         }
 
-        if (in_array($needle, $container)) {
+        if (in_array($needle, $container, true)) {
             return true;
         }
 
         return false;
     }
-
-
 }

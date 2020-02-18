@@ -41,7 +41,7 @@ class FlushPermissionsCommand extends Command
                 'data'   => '*',
                 'action' => '*',
             ]),
-            'agent'     => '{{ agent.id }} == 1',
+            'agent' => '{{ agent.id }} == 1',
         ])->getResource();
 
         // Everything that is owned, should be allowed to query.

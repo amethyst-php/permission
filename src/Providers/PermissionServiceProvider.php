@@ -10,8 +10,8 @@ use Amethyst\Permissions\PermissionDictionary;
 use Amethyst\Permissions\PermissionDictionaryContract;
 use Amethyst\Permissions\PermissionStore;
 use Amethyst\Permissions\PermissionStoreContract;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 
 class PermissionServiceProvider extends CommonServiceProvider
 {
@@ -58,7 +58,7 @@ class PermissionServiceProvider extends CommonServiceProvider
             Permission::observe(PermissionObserver::class);
 
             \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
-            
+
             app(PermissionStoreContract::class)->reset();
             app(PermissionDictionaryContract::class)->boot();
         }
