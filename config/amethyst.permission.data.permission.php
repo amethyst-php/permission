@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'table'      => 'amethyst_permissions',
+    'table'      => 'permission',
     'comment'    => 'Permission',
     'model'      => Amethyst\Models\Permission::class,
     'schema'     => Amethyst\Schemas\PermissionSchema::class,
