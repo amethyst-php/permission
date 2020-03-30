@@ -25,33 +25,19 @@ class DataPermission extends BasePermission
             return $store;
         }
 
-        $permissions = $this->permissions($agent)->first(function (Permission $model) use ($permission) {
+        $permissions = $this->permissions($agent, ['data'])->first(function (Permission $model) use ($permission) {
             return $this->isRelatedPermission($model, $permission);
         });
 
+        
         $this->store->set($agent, $permission, $permissions !== null);
 
         return $permissions !== null;
     }
 
-    /**
-     * Given agent retrieve a list of permissions.
-     *
-     * @param Model $agent
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function permissions(Model $agent, array $types = ['data']): Collection
-    {
-        return $this->dictionary->getPermissionsByType($types)->filter(function (Permission $model) use ($agent) {
-            return $this->isRelatedAgent($model, $agent);
-        });
-    }
-
     public function getPermissionsByDataAndAction(Model $agent, array $actions = [], array $data = []): Collection
     {
-        return $this->permissions($agent)->filter(function (Permission $model) use ($data) {
+        return $this->permissions($agent, ['data'])->filter(function (Permission $model) use ($data) {
             $stack = $this->parsePayload($model->parsed->data);
 
             return $stack[0] === '*' || count(array_intersect($data, $stack)) > 0;

@@ -16,15 +16,20 @@ class RoutePermission extends BasePermission
      *
      * @return bool
      */
-    public function can(Model $agent, Request $request)
+    public function can(Model $agent = null, Request $request)
     {
+        if ($agent === null) {
+            $agent = $this->guestUser();
+        }
+
+
         $store = $this->store->get($agent, $this->getPrimaryKeyByRequest($request));
 
         if (is_bool($store)) {
             return $store;
         }
 
-        $permissions = $this->permissions($agent)->first(function (Permission $model) use ($request) {
+        $permissions = $this->permissions($agent, ['route'])->first(function (Permission $model) use ($request) {
             return $this->isRelatedPermission($model, $request);
         });
 
@@ -57,23 +62,34 @@ class RoutePermission extends BasePermission
 
         $url = $this->parsePayload($payload->url);
 
-        if (!$this->invalidUrl($request->url(), $url)) {
+        if (!$this->validUrl($request->path(), $url)) {
             return false;
         }
 
-        $method = $this->parsePayload($payload->method);
+        $method = $this->parsePayload($payload->method ?? '*');
 
-        if (!$this->invalidMethod($request->url(), $method)) {
+        if (!$this->validMethod($request->method(), $method)) {
             return false;
         }
-
         return true;
     }
 
-    public function invalidUrl(string $needle, array $container): bool
+    public function validUrl(string $needle, array $container): bool
     {
+        if (!is_array($container)) {
+            $container = [$container];
+        }
+
+        if (count($container) === 0) {
+            return false;
+        }
+
+        if ($container[0] === '*') {
+            return true;
+        }
+
         foreach ($container as $item) {
-            if (preg_match('/'.$item.'/', $needle)) {
+            if (preg_match('/^'.str_replace("/", "\/", $this->normalizePath($item)).'$/', $this->normalizePath($needle))) {
                 return true;
             }
         }
@@ -81,13 +97,22 @@ class RoutePermission extends BasePermission
         return false;
     }
 
-    public function invalidMethod(string $needle, array $container): bool
+    public function normalizePath(string $i)
     {
-        if (count($needle) === 0) {
+        return $i[0] !== "/" ? "/".$i : $i;
+    }
+
+    public function validMethod(string $needle, array $container): bool
+    {
+        if (!is_array($container)) {
+            $container = [$container];
+        }
+
+        if (count($container) === 0) {
             return false;
         }
 
-        if ($needle[0] === '*') {
+        if ($container[0] === '*') {
             return true;
         }
 

@@ -55,7 +55,7 @@ class PermissionStore implements PermissionStoreContract
      */
     public function key(Model $agent, string $permission): string
     {
-        if (empty($agent->id)) {
+        if ($agent->id === null) {
             throw new PermissionStoreMissingAgentIdException();
         }
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
 use Railken\EloquentMapper\Scopes\FilterScope;
+use Railken\Lem\Agents;
 
 class PermissionScope
 {
@@ -18,14 +19,17 @@ class PermissionScope
     {
         $agent = Auth::user();
 
-        if (!$agent) {
+        if ($manager->getAgent() instanceof Agents\SystemAgent) {
             return;
+        }
+
+        if (!$agent) {
+            $agent = app('amethyst.permission.data')->guestUser();
         }
 
         $name = app('amethyst')->getNameDataByModel(get_class($builder->getModel()));
 
         // $tableName = $builder->getQuery()->from;
-
         $permissions = app('amethyst.permission.data')->getPermissionsByDataAndAction($agent, ['query'], [$name]);
 
         // No permissions means no authorization

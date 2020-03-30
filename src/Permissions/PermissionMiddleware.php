@@ -3,6 +3,7 @@
 namespace Amethyst\Permissions;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionMiddleware
 {
@@ -12,7 +13,7 @@ class PermissionMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!app('amethyst.permission.route')->can($request)) {
+        if (!app('amethyst.permission.route')->can(Auth::user(), $request)) {
             abort(404);
         }
 
