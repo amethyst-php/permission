@@ -17,9 +17,9 @@ class PermissionScope
      */
     public function apply($manager, $builder): void
     {
-        $agent = Auth::user();
+        $agent = $manager->getAgent();
 
-        if ($manager->getAgent() instanceof Agents\SystemAgent) {
+        if ($agent instanceof Agents\SystemAgent) {
             return;
         }
 
@@ -34,11 +34,13 @@ class PermissionScope
 
         // No permissions means no authorization
         if ($permissions->count() === 0) {
+
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
 
             return;
         }
+
 
         $unfilteredPermissions = $permissions->filter(function ($permission) {
             return empty($permission->parsed->filter);
@@ -62,7 +64,6 @@ class PermissionScope
 
         $scope = new FilterScope();
         $scope->apply($builder, $strFilter);
-
         /*
         $select = [];
 

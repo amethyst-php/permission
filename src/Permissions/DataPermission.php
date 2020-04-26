@@ -5,6 +5,7 @@ namespace Amethyst\Permissions;
 use Amethyst\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Railken\Lem\Contracts\AgentContract;
 
 class DataPermission extends BasePermission
 {
@@ -35,7 +36,7 @@ class DataPermission extends BasePermission
         return $permissions !== null;
     }
 
-    public function getPermissionsByDataAndAction(Model $agent, array $actions = [], array $data = []): Collection
+    public function getPermissionsByDataAndAction(AgentContract $agent, array $actions = [], array $data = []): Collection
     {
         return $this->permissions($agent, ['data'])->filter(function (Permission $model) use ($data) {
             $stack = $this->parsePayload($model->parsed->data);

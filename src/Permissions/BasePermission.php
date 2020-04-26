@@ -5,6 +5,7 @@ namespace Amethyst\Permissions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Amethyst\Models\Permission;
+use Railken\Lem\Contracts\AgentContract;
 
 class BasePermission
 {
@@ -55,12 +56,12 @@ class BasePermission
     /**
      * Given agent retrieve a list of permissions.
      *
-     * @param Model $agent
+     * @param AgentContract $agent
      * @param array $types
      *
      * @return Collection
      */
-    public function permissions(Model $agent, array $types = ['data']): Collection
+    public function permissions(AgentContract $agent, array $types = ['data']): Collection
     {
         return $this->dictionary->getPermissionsByType($types)->filter(function (Permission $model) use ($agent) {
             return $this->isRelatedAgent($model, $agent);

@@ -29,32 +29,6 @@ class FlushPermissionsCommand extends Command
      */
     public function handle()
     {
-        $helper = new \Amethyst\Core\Helper();
-
-        $this->info('Generating permissions...');
-
-        // Allow user.id for everything.
-        $admin = app(Managers\PermissionManager::class)->findOrCreate([
-            'effect'  => 'allow',
-            'type'    => 'data',
-            'payload' => Yaml::dump([
-                'data'   => '*',
-                'action' => '*',
-            ]),
-            'agent' => '{{ agent.id }} == 1',
-        ])->getResource();
-
-        // Everything that is owned, should be allowed to query.
-        app(Managers\PermissionManager::class)->createOrFail([
-            'effect'  => 'allow',
-            'type'    => 'data',
-            'payload' => Yaml::dump([
-                'data'   => '*',
-                'action' => 'query',
-                'filter' => 'ownables.owner_id = {{ agent.id }}',
-            ]),
-        ]);
-
         $this->info('Done!');
     }
 }
