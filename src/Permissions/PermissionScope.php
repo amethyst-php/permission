@@ -4,7 +4,6 @@ namespace Amethyst\Permissions;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Support\Facades\Auth;
 use Railken\EloquentMapper\Scopes\FilterScope;
 use Railken\Lem\Agents;
 
@@ -34,13 +33,11 @@ class PermissionScope
 
         // No permissions means no authorization
         if ($permissions->count() === 0) {
-
             // i think this shit is bad.
             $builder->whereRaw('0 = 1');
 
             return;
         }
-
 
         $unfilteredPermissions = $permissions->filter(function ($permission) {
             return empty($permission->parsed->filter);

@@ -22,7 +22,6 @@ class RoutePermission extends BasePermission
             $agent = $this->guestUser();
         }
 
-
         $store = $this->store->get($agent, $this->getPrimaryKeyByRequest($request));
 
         if (is_bool($store)) {
@@ -71,6 +70,7 @@ class RoutePermission extends BasePermission
         if (!$this->validMethod($request->method(), $method)) {
             return false;
         }
+
         return true;
     }
 
@@ -89,7 +89,7 @@ class RoutePermission extends BasePermission
         }
 
         foreach ($container as $item) {
-            if (preg_match('/^'.str_replace("/", "\/", $this->normalizePath($item)).'$/', $this->normalizePath($needle))) {
+            if (preg_match('/^'.str_replace('/', "\/", $this->normalizePath($item)).'$/', $this->normalizePath($needle))) {
                 return true;
             }
         }
@@ -99,7 +99,7 @@ class RoutePermission extends BasePermission
 
     public function normalizePath(string $i)
     {
-        return $i[0] !== "/" ? "/".$i : $i;
+        return $i[0] !== '/' ? '/'.$i : $i;
     }
 
     public function validMethod(string $needle, array $container): bool

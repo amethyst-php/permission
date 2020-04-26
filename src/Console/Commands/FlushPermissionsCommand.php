@@ -2,9 +2,7 @@
 
 namespace Amethyst\Console\Commands;
 
-use Amethyst\Managers;
 use Illuminate\Console\Command;
-use Symfony\Component\Yaml\Yaml;
 
 class FlushPermissionsCommand extends Command
 {

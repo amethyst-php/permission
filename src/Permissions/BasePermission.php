@@ -2,9 +2,9 @@
 
 namespace Amethyst\Permissions;
 
+use Amethyst\Models\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Amethyst\Models\Permission;
 use Railken\Lem\Contracts\AgentContract;
 
 class BasePermission
@@ -57,7 +57,7 @@ class BasePermission
      * Given agent retrieve a list of permissions.
      *
      * @param AgentContract $agent
-     * @param array $types
+     * @param array         $types
      *
      * @return Collection
      */
@@ -69,14 +69,14 @@ class BasePermission
     }
 
     /**
-     * Retrieve a new user as guest user
+     * Retrieve a new user as guest user.
      *
      * @return Model
      */
     public function guestUser()
     {
         $class = config('amethyst.authentication.entity');
-        $agent = new $class;
+        $agent = new $class();
         $agent->id = 0;
 
         return $agent;

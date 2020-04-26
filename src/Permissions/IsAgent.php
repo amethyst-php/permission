@@ -3,18 +3,17 @@
 namespace Amethyst\Permissions;
 
 use Amethyst\Models\Permission;
-use Illuminate\Database\Eloquent\Model;
+use nicoSWD\Rules\Exceptions\ParserException;
 use nicoSWD\Rules\Rule;
 use Railken\Lem\Contracts\AgentContract;
-use nicoSWD\Rules\Exceptions\ParserException;
 
 trait IsAgent
 {
     /**
      * Return if the permission is related to the current agent.
      *
-     * @param Permission $model
-     * @param AgentContract      $agent
+     * @param Permission    $model
+     * @param AgentContract $agent
      *
      * @return bool
      */

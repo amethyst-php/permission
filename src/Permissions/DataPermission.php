@@ -30,7 +30,6 @@ class DataPermission extends BasePermission
             return $this->isRelatedPermission($model, $permission);
         });
 
-        
         $this->store->set($agent, $permission, $permissions !== null);
 
         return $permissions !== null;
