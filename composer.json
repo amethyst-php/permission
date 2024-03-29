@@ -14,7 +14,8 @@
         "phpunit/phpunit": "*",
         "orchestra/testbench": "*",
         "amethyst/foo": "0.3.*",
-        "amethyst/user": "0.3.*"
+        "amethyst/user": "0.3.*",
+        "friendsofphp/php-cs-fixer": "^3.52"
     },
     "autoload": {
         "psr-4" : {
