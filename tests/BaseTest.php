@@ -24,8 +24,14 @@ abstract class BaseTest extends \Orchestra\Testbench\TestCase
 
         // $this->artisan('amethyst:permission:flush');
 
-        Bar::morph_many('ownables', Ownable::class, 'ownable');
-        Foo::morph_many('ownables', Ownable::class, 'ownable');
+        Bar::resolveRelationUsing('ownables', function (Bar $model) {
+            return $model->morphMany(Ownable::class, 'ownable');
+        });
+
+        Foo::resolveRelationUsing('ownables', function (Foo $model) {
+            return $model->morphMany(Ownable::class, 'ownable');
+        });
+        
         $this->artisan('mapper:generate');
         \Railken\Lem\Repository::resetScopes();
         \Railken\Lem\Repository::addScope(new \Amethyst\Permissions\PermissionScope());
