@@ -3,8 +3,8 @@
 namespace Amethyst\Permissions;
 
 use Amethyst\Models\Permission;
-use nicoSWD\Rules\Exceptions\ParserException;
-use nicoSWD\Rules\Rule;
+use nicoSWD\Rule\Parser\Exception\ParserException;
+use nicoSWD\Rule\Rule;
 use Railken\Lem\Contracts\AgentContract;
 
 trait IsAgent
